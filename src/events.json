@@ -1,0 +1,20 @@
+[
+    {
+        "id": "attentats-nov15",
+        "type": "article-list",
+        "date": "2015-09-13",
+        "articles": ["nyt1311-1"]
+    },
+    {
+        "id": "attentats-nov15",
+        "type": "article-list",
+        "date": "2015-11-14",
+        "articles": ["nyt1311-1"]
+    },
+    {
+        "id": "attentats-nov15",
+        "type": "article-list",
+        "date": "2016-12-23",
+        "articles": ["nyt1311-1"]
+    }
+]

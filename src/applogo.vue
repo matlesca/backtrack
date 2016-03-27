@@ -37,8 +37,8 @@
 .static-logo, .loading-logo-spin {transition: opacity 0.6s ease}
 .loading-logo-spin {opacity:0;transform-origin: 50% 48%}
 
-/*.backtrack-logo:hover .static-logo, .backtrack-logo.is-loading .static-logo {opacity:0;}*/
-/*.backtrack-logo:hover .loading-logo-spin, .backtrack-logo.is-loading .loading-logo-spin {opacity: 1; animation:spin 0.6s linear infinite 0.1s;}*/
+.backtrack-logo.is-loading .static-logo {opacity:0;}
+.backtrack-logo.is-loading .loading-logo-spin {opacity: 1; animation:spin 0.6s linear infinite 0.1s;}
 
 @keyframes spin {100% {transform:rotate(360deg);}}
 

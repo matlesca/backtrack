@@ -8,44 +8,6 @@ import TWEEN from 'tween.js'
 // document.body.appendChild(addScript)
 
 export default {
-  cubeExample: function () {
-    var scene, camera, renderer
-    var geometry, material, mesh, sphereMaterial, sphere
-    var elem = document.querySelector('.cosmos-main')
-    init()
-    animate()
-    function init () {
-      scene = new THREE.Scene()
-      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000)
-      camera.position.z = 300
-      geometry = new THREE.BoxGeometry(200, 200, 200)
-      material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true })
-      mesh = new THREE.Mesh(geometry, material)
-      scene.add(mesh)
-      // sphere :
-      sphereMaterial = new THREE.MeshLambertMaterial({
-          color: 0x576271
-      })
-      sphere = new THREE.Mesh(new THREE.SphereGeometry(50, 16, 16), sphereMaterial)
-      scene.add(sphere)
-      // point light
-      var pointLight = new THREE.PointLight(0xFFFFFF)
-      pointLight.position.x = 100
-      pointLight.position.y = 100
-      pointLight.position.z = 100
-      scene.add(pointLight)
-      renderer = new THREE.WebGLRenderer()
-      renderer.setSize(window.innerWidth, window.innerHeight)
-      // renderer.setClearColorHex(0x292929, 1)
-      elem.appendChild(renderer.domElement)
-    }
-    function animate () {
-      requestAnimationFrame(animate)
-      mesh.rotation.x += 0.01
-      mesh.rotation.y += 0.02
-      renderer.render(scene, camera)
-    }
-  },
   starsExample: function () {
     var camera, scene, renderer
     var scene2, renderer2

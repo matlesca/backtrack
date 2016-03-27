@@ -1,0 +1,16 @@
+[
+    {
+        "name": {"FR": "Attentats du 13 Novembre à Paris", "EN": "13/11 Terrorist attacks in Paris"},
+        "lang": ["FR", "EN"],
+        "abstract": {
+            "FR": "Plus de 100 personnes tuées ce Vendredi dans de multiples attaques terroristes à Paris et Saint-Denis",
+            "EN": "More than 100 people were killed Friday in multiple acts of violence in and around Paris."
+        },
+        "topic": "news",
+        "id": "nyt1311-1",
+        "media": [
+            {"type": "image", "url": "images\/2016\/03\/18\/multimedia\/19brussels-hollande\/19brussels-hollande-articleLarge-v2.jpg"},
+            {"type": "image", "url": "images\/2016\/03\/18\/multimedia\/19brussels-hollande\/19brussels-hollande-articleLarge-v2.jpg"}
+        ]
+    }
+]

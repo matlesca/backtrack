@@ -11,7 +11,6 @@
     // replace: false,
     components: {},
     methods: {
-      cubeExample: cRend.cubeExample,
       starsExample: cRend.starsExample
     },
     ready: function () {
