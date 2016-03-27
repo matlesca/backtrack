@@ -121,12 +121,6 @@ export default {
         }.bind(this), function (error) {
             console.log(error.message)
         })
-        // test functions
-        window.addEventListener('keydown', function (event) {
-            if (event.keyCode === 38 || event.keyCode === 40) {
-                if (this.currentPos < 300) {this.currentPos = 300} else {this.currentPos = 100}
-            }
-        }.bind(this))
     },
     data () {
         return {

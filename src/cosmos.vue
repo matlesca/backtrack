@@ -5,20 +5,18 @@
 </template>
 
 <script type="text/javascript">
-  import cRend from './cosmosRendering.js'
+  import Cosmos from './cosmosRendering.js'
 
   export default {
     // replace: false,
     components: {},
-    methods: {
-      starsExample: cRend.starsExample
-    },
     ready: function () {
-      this.starsExample()
+        this.myCosmos = new Cosmos('.cosmos-main')
+        this.myCosmos.init()
     },
     data () {
       return {
-
+          myCosmos: {}
       }
     }
   }
