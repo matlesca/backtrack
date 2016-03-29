@@ -1,20 +1,29 @@
 [
     {
         "id": "attentats-nov15",
-        "type": "article-list",
-        "date": "2015-09-13",
-        "articles": ["nyt1311-1"]
+        "title": "Terrorist attacks in Paris",
+        "default": true,
+        "type": "article",
+        "category": "society",
+        "date": "2015-11-13",
+        "description": "At 9pm several armed men arrived at Bataclan and attacked the participants at a concert by th rock band Eagles of Death metal."
     },
     {
-        "id": "attentats-nov15",
-        "type": "article-list",
-        "date": "2015-11-14",
-        "articles": ["nyt1311-1"]
+        "id": "loi-macron1",
+        "title": "Emmanuel Macron presents its law project for economy in France",
+        "default": true,
+        "type": "article",
+        "category": "politics",
+        "date": "2015-12-26",
+        "description": "The French minister of economy unveiled a series of measures to improve the employment situation in the country."
     },
     {
-        "id": "attentats-nov15",
-        "type": "article-list",
-        "date": "2016-12-23",
-        "articles": ["nyt1311-1"]
+        "id": "smashing-pump1",
+        "title": "Smashing Pumpkins reunited with James Iha",
+        "default": true,
+        "type": "article",
+        "category": "culture",
+        "date": "2016-12-05",
+        "description": "The famous rock band offically announced its reunion this saturday. A come-back concert tour is expected this summer."
     }
 ]

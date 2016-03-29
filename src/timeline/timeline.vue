@@ -26,6 +26,7 @@ export default {
     methods: {
         eventSelected: function (event) {
             this.currentPos = this.evPos[this.events.indexOf(event)]
+            this.$dispatch('event-select', event)
         },
         getEvent: function (date) {
             for (var ii = 0; ii < this.events.length; ii++) {

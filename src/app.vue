@@ -3,7 +3,7 @@
         <navbar :loading="loading"></navbar>
 
 
-        <timeline :events="events" :loading="loading"></timeline>
+        <timeline :events="events" :loading="loading" v-on:event-select="eventSelected"></timeline>
 
         <!-- <br><button type="button" name="button" v-on:click="loginDeezer()">Loggin to Deezer</button>
         <br><button type="button" name="button" v-on:click="getLastSongs()">Load 50 last played songs</button>
@@ -11,7 +11,7 @@
         <li v-for="song in lastSongs">{{song.title}} played on the : {{song.date}}</li>
     </ul> -->
 
-    <cosmos></cosmos>
+    <cosmos :events="events" :currentevent="currentEvent"></cosmos>
 
     <!-- DEEZER root info place -->
     <div id="dz-root"></div>
@@ -31,6 +31,9 @@ export default {
     components: {timeline, cosmos, navbar},
     methods: {
         loginDeezer: deezer.login,
+        eventSelected: function (event) {
+            this.currentEvent = event
+        },
         getLastSongs: function () {
             if (!this.lastSongs) {
                 this.lastSongs = []
@@ -50,9 +53,11 @@ export default {
     },
     ready: function () {
         deezer.init()
+        this.currentEvent = this.events[0]
     },
     data () {
         return {
+            currentEvent: {},
             lastSongRank: 0,
             lastSongs: '',
             featArtist: '',
