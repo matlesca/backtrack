@@ -63,7 +63,7 @@ export default function (elemQuery) {
         return new Promise(function (resolve) {
             that.grids = []
             for (ii = 0; ii < grids.length; ii++) {
-                div = document.querySelector('#event-grid-' + ii)
+                div = document.querySelector('#event-grid-wrapper' + ii)
                 gridObject = new THREE.CSS3DObject(div)
                 gridObject.position.x = 0
                 gridObject.position.y = 0

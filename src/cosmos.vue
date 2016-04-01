@@ -1,10 +1,14 @@
 <template>
     <div class="cosmos-main"></div>
-    <div class="event-grid" v-show="showGrids" v-for="grid in computeGrids" v-bind:id="'event-grid-' + $index">
-        <div class="event-panel" v-for="panel in grid.panels" v-bind:style="panel.styleObj">
-            <span v-if="panel.type = 'text'">{{panel.text}}</span>
+    <div class="event-grid-wrapper" v-show="showGrids" v-for="grid in computeGrids" v-bind:id="'event-grid-wrapper' + $index">
+        <div class="event-grid" v-bind:id="'event-grid-' + $index">
+            <div class="event-panel" v-for="panel in grid.panels" v-bind:style="panel.styleObj">
+                <span v-if="panel.type === 'text'">{{panel.text}}</span>
+                <img class="event-panel-img" v-if="panel.type === 'image'" v-bind:src="panel.src"/>
+            </div>
         </div>
     </div>
+
     <div class="month-label" v-show="showLabels" v-for="label in monthLabels" v-bind:id="'month-label-' + $index">
         {{label.text}}
     </div>
@@ -14,6 +18,7 @@
 <script type="text/javascript">
 import Cosmos from './cosmosRendering.js'
 import moment from 'moment'
+import Masonry from 'masonry-layout'
 
 export default {
     // replace: false,
@@ -23,6 +28,11 @@ export default {
         getZPos: function (date) {
             // Scales a date to its cosmos zpos (proportionally with the events dates distribution)
             return Math.floor(this.param.startPos + this.param.minZGap * moment(date).diff(this.evDates.dates[0], 'days') / this.evDates.minGap)
+        },
+        initMasonry: function () {
+            for (var ii = 0; ii < this.events.length; ii++) {
+                this.masonrys.push(new Masonry('#event-grid-' + ii, {itemSelector: '.event-panel', columnWidth: 10}))
+            }
         }
     },
     watch: {
@@ -68,9 +78,11 @@ export default {
             }.bind(this))
         },
         computeGrids: function () {
-            var ii, retTab, retObj
+            var ii, jj, retTab, retObj, textLocale
             retTab = []
             moment.locale(this.locale)
+            if (this.locale === 'fr') {textLocale = 'fr'} else {textLocale = 'en'}
+            // textLocale = 'en'
             for (ii = 0; ii < this.events.length; ii++) {
                 retObj = {}
                 retObj.zpos = this.getZPos(this.events[ii].date)
@@ -78,12 +90,16 @@ export default {
                 // Event title panel :
                 retObj.panels.push({
                     'type': 'text',
-                    'text': this.events[ii].title,
+                    'text': this.events[ii].title[textLocale],
                     'styleObj': {
                         'color': 'black',
                         'backgroundColor': 'rgb(' + (255 - Math.round(50 * Math.random())) + ',' + (255 - Math.round(50 * Math.random())) + ',' + (255 - Math.round(50 * Math.random())) + ')',
-                        'fontSize': 70 - Math.min(40, Math.round(this.events[ii].title.length - 25 + 20 * Math.random())) + 'px',
-                        'maxWidth': Math.round(20 + 20 * Math.random()) + '%'
+                        'fontFamily': 'Times New Roman, Times, serif',
+                        'fontSize': 70 - Math.min(40, Math.round(this.events[ii].title[textLocale].length - 25 + 20 * Math.random())) + 'px',
+                        'fontWeight': 'bold',
+                        'fontStyle': 'italic',
+                        'maxWidth': Math.round(20 + 20 * Math.random()) + '%',
+                        'margin': Math.round(5 + 3 * Math.random()) + 'px'
                     }
                 })
                 // Event date panel :
@@ -94,19 +110,53 @@ export default {
                         'color': '#ffffff',
                         'backgroundColor': 'transparent',
                         'fontSize': 90 - Math.round(30 * Math.random()) + 'px',
-                        'maxWidth': '100%'
+                        'maxWidth': '100%',
+                        'margin': Math.round(5 + 3 * Math.random()) + 'px'
                     }
                 })
-                // Empty panel :
-                retObj.panels.push({
-                    'type': 'empty',
-                    'styleObj': {
-                        'backgroundColor': 'transparent',
-                        'border': 'solid white',
-                        'width': (10 + Math.round(40 * Math.random())) + '%',
-                        'height': (5 + Math.round(20 * Math.random())) + '%'
+                // Other image/text panels :
+                for (jj = 0; jj < this.events[ii].panels.length; jj++) {
+                    var randVal = Math.random()
+                    if (this.events[ii].panels[jj].type === 'text') {
+                        retObj.panels.push({
+                            'type': 'text',
+                            'text': this.events[ii].panels[jj].text[textLocale],
+                            'styleObj': {
+                                'color': randVal < 0.5 ? 'white' : 'black',
+                                'backgroundColor': randVal < 0.5 ? 'transparent' : 'rgb(' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ')',
+                                'fontSize': Math.round(18 + 4 * Math.random()) + 'px',
+                                'fontFamily': 'Roboto, Helvetica, sans-serif',
+                                'maxWidth': Math.round(30 + 15 * Math.random()) + '%',
+                                'margin': Math.round(5 + 3 * Math.random()) + 'px'
+                            }
+                        })
                     }
-                })
+                    if (this.events[ii].panels[jj].type === 'image') {
+                        retObj.panels.push({
+                            'type': 'image',
+                            'src': this.events[ii].panels[jj].src,
+                            'styleObj': {
+                                'backgroundColor': randVal < 0.5 ? 'transparent' : 'rgb(' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ')',
+                                'maxWidth': Math.round(30 + 10 * Math.random()) + '%',
+                                'padding': Math.round(5 + 5 * Math.random()) + 'px',
+                                'margin': Math.round(5 + 3 * Math.random()) + 'px'
+                            }
+                        })
+                    }
+                }
+                // Empty panels :
+                // for (var rr = 0; rr < 4; rr++) {
+                //     if (Math.random() > 0.3) {
+                //         retObj.panels.push({
+                //             'type': 'empty',
+                //             'styleObj': {
+                //                 'backgroundColor': 'transparent',
+                //                 'width': (10 + Math.round(20 * Math.random())) + '%',
+                //                 'height': (5 + Math.round(10 * Math.random())) + '%'
+                //             }
+                //         })
+                //     }
+                // }
                 // Sort randomly panels :
                 retObj.panels.sort(function () {return Math.random() > 0.5})
                 retTab.push(retObj)
@@ -119,10 +169,12 @@ export default {
         this.myCosmos.init(this.computeGrids[this.computeGrids.length - 1].zpos)
         this.myCosmos.addMonthLabels(this.monthLabels).then(function () {this.showLabels = true}.bind(this))
         this.myCosmos.addGrids(this.computeGrids).then(function () {this.showGrids = true}.bind(this))
+        window.setTimeout(this.initMasonry, 1)
     },
     data () {
         return {
             myCosmos: {},
+            masonrys: [],
             locale: window.navigator.userLanguage || window.navigator.language,
             showGrids: false,
             showLabels: false,
@@ -139,11 +191,15 @@ export default {
     width: 100%; height: 100%;
     overflow: hidden;
 }
-.event-grid {width:100%; height: 100%; padding-top:250px; opacity: 0}
+.event-grid-wrapper {
+    width: 100%; height: 100%;
+    padding-top:250px; opacity: 0
+}
 .month-label {
     font-size: 80px;
     color: #ffffff;
     text-transform: capitalize;
     font-family: 'Roboto', 'Helvetica', sans-serif
 }
+.event-panel-img {width: 100%; height: auto;}
 </style>

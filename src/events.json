@@ -1,29 +1,50 @@
 [
     {
-        "id": "attentats-nov15",
-        "title": "Terrorist attacks in Paris",
+        "title": {"en": "Terrorist attacks in Paris", "fr": "Attaques terroristes à Paris"},
         "default": true,
         "type": "article",
         "category": "society",
         "date": "2015-11-13",
-        "description": "At 9pm several armed men arrived at Bataclan and attacked the participants at a concert by th rock band Eagles of Death metal."
+        "panels": [
+            {"type": "text", "text": {
+                "en": "At 9pm several armed men arrived at Bataclan and attacked the participants at a concert by th rock band Eagles of Death metal.",
+                "fr": "A 21h des hommes armés ont pris d'assaut le Bataclan, faisant plus de 100 morts."
+            }},
+            {"type": "image", "src": "http://i.f1g.fr/media/figaro/805x453_crop/2015/11/20/XVM2fab5dca-8fbd-11e5-8af4-dde313013ee9.jpg"},
+            {"type": "image", "src": "http://france3-regions.francetvinfo.fr/paris-ile-de-france/sites/regions_france3/files/styles/top_big/public/assets/images/2016/01/02/000_arp4068395_1.jpg?itok=y5dw7PCA"},
+            {"type": "image", "src": "http://www.metronews.fr/_internal/gxml!0/r0dc21o2f3vste5s7ezej9x3a10rp3w$m2hv93zgdi18tbpngphif3i69tdmkbw/sipa_ap21821820_000001.jpeg"}
+        ]
     },
     {
-        "id": "loi-macron1",
-        "title": "Emmanuel Macron presents its law project for economy in France",
+        "title": {"en": "Emmanuel Macron presents its law project for economy in France",
+            "fr": "Emmanuel Macron présente son projet de loi pour l'économie."},
         "default": true,
         "type": "article",
         "category": "politics",
-        "date": "2015-12-26",
-        "description": "The French minister of economy unveiled a series of measures to improve the employment situation in the country."
+        "date": "2015-08-26",
+        "panels": [
+            {"type": "text", "text": {
+                "en": "The French minister of economy unveiled a series of measures to improve the employment situation in the country.",
+                "fr": "Le ministre de l'économie a présenté une série de mesures visant à améliorer la situation de l'emploi en France."
+            }},
+            {"type": "image", "src": "http://www.lesinrocks.com/wp-content/thumbnails/uploads/2014/09/604elysee-palace-in-paris-september-9-2014-reuterspatrick-kovarik-tt-width-604-height-431-crop-0-bgcolor-000000-nozoom_default-1-lazyload-0.jpg"},
+            {"type": "image", "src": "http://www.entreprises.ouest-france.fr/sites/default/files/imagecache/detail-article/2012/07/10/20667_8432.jpg"},
+            {"type": "image", "src": "http://referentiel.nouvelobs.com/file/4614655-la-france-va-vers-un-record-de-chomage-en-2013-selon-l-ofce.jpg"}
+        ]
     },
     {
-        "id": "smashing-pump1",
-        "title": "Smashing Pumpkins reunited with James Iha",
+        "title": {"en": "Smashing Pumpkins reunited with James Iha", "fr": "James Iha réintègre les Smashing Pumpkins"},
         "default": true,
         "type": "article",
         "category": "culture",
-        "date": "2016-12-05",
-        "description": "The famous rock band offically announced its reunion this saturday. A come-back concert tour is expected this summer."
+        "date": "2016-06-05",
+        "panels": [
+            {"type": "text", "text": {
+                "en":"The famous rock band offically announced its reunion this saturday. A come-back concert tour is expected this summer.",
+                "fr": "Le groupe de rock a annoncé sa reformation ce samedi. Une tournée est prévue cet été."
+            }},
+            {"type": "image", "src": "http://kilscene.com/wp-content/uploads/2014/02/Smashing_Group.jpg"},
+            {"type": "image", "src": "https://spfreaks.files.wordpress.com/2013/07/ji01.jpg"}
+        ]
     }
 ]
