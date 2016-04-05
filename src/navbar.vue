@@ -1,6 +1,6 @@
 <template>
   <div class="navbar-wrapper">
-    <button class="nav-main-btn" type="button" name="button" :disabled="loading">
+    <button class="nav-main-btn" type="button" v-on:click.prevent="clickMenu()">
       <app-logo class="top-logo" :loading="loading"></app-logo>
       <span class="nav-burger" v-if="!loading"><span></span></span>
     </button>
@@ -16,7 +16,9 @@
     components: {'app-logo': applogo},
     props: ['loading'],
     methods: {
-
+        clickMenu: function () {
+            this.$dispatch('loading-switch', !this.loading)
+        }
     },
     created: function () {
 

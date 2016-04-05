@@ -58,20 +58,17 @@ export default function (elemQuery) {
         material = new THREE.LineDashedMaterial({color: 0xA493C6, linewidth: 3, dashSize: 10, gapSize: 8, fog: true})
         return new THREE.Line(geometry, material)
     }
-    this.addGrids = function (grids) {
-        var ii, gridObject, div
+    this.addGrid = function (grid) {
+        var gridObject, div
         return new Promise(function (resolve) {
-            that.grids = []
-            for (ii = 0; ii < grids.length; ii++) {
-                div = document.querySelector('#event-grid-wrapper' + ii)
-                gridObject = new THREE.CSS3DObject(div)
-                gridObject.position.x = 0
-                gridObject.position.y = 0
-                gridObject.position.z = grids[ii].zpos
-                gridObject.rotation.y = Math.PI
-                that.scene2.add(gridObject)
-                that.grids.push(gridObject)
-            }
+            div = document.querySelector('#' + grid.elemId)
+            gridObject = new THREE.CSS3DObject(div)
+            gridObject.position.x = 0
+            gridObject.position.y = 0
+            gridObject.position.z = grid.zpos
+            gridObject.rotation.y = Math.PI
+            that.scene2.add(gridObject)
+            that.grids.push(gridObject)
             resolve()
         })
     }
@@ -83,20 +80,19 @@ export default function (elemQuery) {
         }
         return null
     }
-    this.addMonthLabels = function (labels) {
+    this.addLabels = function (labels) {
         var ii, labelObj, div
         return new Promise(function (resolve) {
             for (ii = 0; ii < labels.length; ii++) {
-                div = document.querySelector('#month-label-' + ii)
+                div = document.querySelector('#' + labels[ii].elemId)
                 labelObj = new THREE.CSS3DObject(div)
-                labelObj.position.x = -400
-                labelObj.position.y = 350
+                labelObj.position.x = labels[ii].xpos
+                labelObj.position.y = labels[ii].ypos
                 labelObj.position.z = labels[ii].zpos
                 labelObj.rotation.y = Math.PI
                 that.scene2.add(labelObj)
                 that.labels.push(labelObj)
             }
-            updateLabelsOpacity()
             resolve()
         })
     }
@@ -132,7 +128,7 @@ export default function (elemQuery) {
         }
     }
     this.moveTo = function (zpos) {
-        if (that.animating === false) {
+        if (that.animating === false && getGrid(zpos)) {
             var duration = 1000 + Math.floor(Math.abs(that.camera.position.z - zpos) / 10)
             that.animating = true
             hideGrids()

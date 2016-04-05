@@ -1,9 +1,9 @@
 <template>
     <div class="main-wrapper">
-        <navbar :loading="loading"></navbar>
+        <navbar :loading="loading" v-on:loading-switch="loadingSwitched"></navbar>
 
 
-        <timeline :events="events" :loading="loading" v-on:event-select="eventSelected"></timeline>
+        <timeline :events="events" :currentevent="currentEvent" :loading="loading" v-on:event-select="eventSelected"></timeline>
 
         <!-- <br><button type="button" name="button" v-on:click="loginDeezer()">Loggin to Deezer</button>
         <br><button type="button" name="button" v-on:click="getLastSongs()">Load 50 last played songs</button>
@@ -21,7 +21,7 @@
 
 <script>
 import timeline from './timeline/timeline.vue'
-import cosmos from './cosmos.vue'
+import cosmos from './cosmos/cosmos.vue'
 import deezer from './deezer.js'
 import navbar from './navbar.vue'
 import loadEvents from './events.json'
@@ -34,11 +34,14 @@ export default {
         eventSelected: function (event) {
             this.currentEvent = event
         },
+        loadingSwitched: function (event) {
+            this.loading = event
+        },
         getLastSongs: function () {
             if (!this.lastSongs) {
                 this.lastSongs = []
             }
-            deezer.getSongs(this.lastSongRank, 50).then(function (success) {
+            deezer.getSongs(this.lastSongRank, 50).then(success => {
                 var date
                 for (var ii = 0; ii < success.length; ii++) {
                     date = new Date(success[ii].timestamp * 1000)
@@ -46,14 +49,17 @@ export default {
                     this.lastSongs.push({'title': success[ii].title, 'date': date})
                 }
                 this.lastSongRank += 50
-            }.bind(this), function (error) {
+            }, error => {
                 console.log(error.message)
             })
+        },
+        play: function () {
+            // deezer.playSong(3135556)
         }
     },
     ready: function () {
-        deezer.init()
-        this.currentEvent = this.events[0]
+        deezer.init(this.play)
+        // this.currentEvent = this.events[0]
     },
     data () {
         return {

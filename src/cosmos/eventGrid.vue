@@ -1,0 +1,125 @@
+<template>
+    <div class="event-grid-wrapper" v-bind:id="myGrid.elemId">
+        <div class="event-grid" v-bind:id="'event-grid-' + index">
+            <div class="event-panel" v-for="panel in myGrid.panels" v-bind:style="panel.styleObj">
+                <span v-if="panel.type === 'text'">{{panel.text}}</span>
+                <img v-bind:class="'img-' + index" class="event-panel-img" v-if="panel.type === 'image'" v-bind:src="panel.src"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script type="text/javascript">
+import moment from 'moment'
+import imagesLoaded from 'imagesloaded'
+import Masonry from 'masonry-layout'
+
+export default {
+    replace: true,
+    props: ['event', 'index', 'zpos', 'cosmos'],
+    computed: {
+        myGrid: function () {
+            var jj, retObj, textLocale
+            moment.locale(this.locale)
+            if (this.locale === 'fr') {textLocale = 'fr'} else {textLocale = 'en'}
+            retObj = {}
+            retObj.zpos = this.zpos
+            retObj.elemId = 'event-grid-wrapper' + this.index
+            retObj.panels = []
+            // Event title panel :
+            retObj.panels.push({
+                'type': 'text',
+                'text': this.event.title[textLocale],
+                'styleObj': {
+                    'color': 'black',
+                    'backgroundColor': 'rgb(' + (255 - Math.round(50 * Math.random())) + ',' + (255 - Math.round(50 * Math.random())) + ',' + (255 - Math.round(50 * Math.random())) + ')',
+                    'fontFamily': 'Times New Roman, Times, serif',
+                    'fontSize': 70 - Math.min(40, Math.round(this.event.title[textLocale].length - 25 + 20 * Math.random())) + 'px',
+                    'fontWeight': 'bold',
+                    'fontStyle': 'italic',
+                    'maxWidth': Math.round(20 + 20 * Math.random()) + '%',
+                    'margin': Math.round(5 + 3 * Math.random()) + 'px'
+                }
+            })
+            // Event date panel :
+            retObj.panels.push({
+                'type': 'text',
+                'text': moment(this.event.date).format('L'),
+                'styleObj': {
+                    'color': '#ffffff',
+                    'backgroundColor': 'transparent',
+                    'fontSize': 90 - Math.round(30 * Math.random()) + 'px',
+                    'maxWidth': '100%',
+                    'margin': Math.round(5 + 3 * Math.random()) + 'px'
+                }
+            })
+            // Other text panels :
+            for (jj = 0; jj < this.event.panels.length; jj++) {
+                var randVal = Math.random()
+                if (this.event.panels[jj].type === 'text') {
+                    retObj.panels.push({
+                        'type': 'text',
+                        'text': this.event.panels[jj].text[textLocale],
+                        'styleObj': {
+                            'color': randVal < 0.5 ? 'white' : 'black',
+                            'backgroundColor': randVal < 0.5 ? 'transparent' : 'rgb(' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ')',
+                            'fontSize': Math.round(18 + 4 * Math.random()) + 'px',
+                            'fontFamily': 'Roboto, Helvetica, sans-serif',
+                            'maxWidth': Math.round(30 + 15 * Math.random()) + '%',
+                            'margin': Math.round(5 + 3 * Math.random()) + 'px'
+                        }
+                    })
+                }
+                // Image panels :
+                if (this.event.panels[jj].type === 'image') {
+                    retObj.panels.push({
+                        'type': 'image',
+                        'src': this.event.panels[jj].src,
+                        'styleObj': {
+                            'backgroundColor': randVal < 0.5 ? 'transparent' : 'rgb(' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ')',
+                            // set a width and not a maxWidth so that masonry renders properly event if the image isn't yet loaded
+                            'width': Math.round(30 + 10 * Math.random()) + '%',
+                            'padding': Math.round(5 + 5 * Math.random()) + 'px',
+                            'margin': Math.round(5 + 3 * Math.random()) + 'px'
+                        }
+                    })
+                }
+            }
+            // Sort randomly panels :
+            retObj.panels.sort(function () {return Math.random() > 0.5})
+            return retObj
+        }
+    },
+    methods: {
+            init: function () {
+                // aa
+            }
+    },
+    ready: function () {
+        imagesLoaded('.img-' + this.index, () => {
+            this.msnry = new Masonry('#event-grid-' + this.index, {itemSelector: '.event-panel', columnWidth: 10})
+            this.cosmos.addGrid(this.myGrid).then(() => {
+                this.$dispatch('event-grid-loaded', this.event)
+            })
+        })
+    },
+    data () {
+        return {
+            msnry: {},
+            locale: window.navigator.userLanguage || window.navigator.language
+        }
+    }
+}
+
+</script>
+
+<style>
+
+.event-grid-wrapper {
+    width: 100%; height: 100%;
+    padding-top:250px; opacity: 0
+}
+
+.event-panel-img {width: 100%; height: auto;}
+
+</style>

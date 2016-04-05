@@ -21,7 +21,7 @@ export default {
 
 .step-triangle {
     fill:#E0E3DA; width: 100%;
-    position: absolute; left:0;
+    position: absolute; top:0; left:0;
     transition: transform 1s ease;
 }
 

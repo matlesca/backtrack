@@ -21,7 +21,7 @@
         "default": true,
         "type": "article",
         "category": "politics",
-        "date": "2015-08-26",
+        "date": "2015-10-26",
         "panels": [
             {"type": "text", "text": {
                 "en": "The French minister of economy unveiled a series of measures to improve the employment situation in the country.",
@@ -37,7 +37,7 @@
         "default": true,
         "type": "article",
         "category": "culture",
-        "date": "2016-06-05",
+        "date": "2016-06-10",
         "panels": [
             {"type": "text", "text": {
                 "en":"The famous rock band offically announced its reunion this saturday. A come-back concert tour is expected this summer.",

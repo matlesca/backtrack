@@ -1,5 +1,5 @@
 <template>
-    <a class="timeline-step-wrapper" v-bind:style="styleObject" v-on:click.prevent="clickDate(event)" v-bind:class="{'selected': currentpos === pos}">
+    <a class="timeline-step-wrapper" v-bind:style="styleObject" v-on:click.prevent="clickDate(event)" v-bind:class="{'selected': currentevent === event}">
         <span class="timeline-date">{{date_formated}}</span>
     </a>
 </template>
@@ -9,7 +9,7 @@ import moment from 'moment'
 
 export default {
     replace: true,
-    props: ['event', 'pos', 'stepheight', 'currentpos'],
+    props: ['event', 'currentevent', 'pos', 'stepheight'],
     methods: {
         clickDate: function (event) {
             this.$dispatch('select-event', event)
@@ -28,11 +28,6 @@ export default {
         },
         styleObject: function () {
             return {'top': this.pos + 'px', 'height': this.stepheight + 'px'}
-        }
-    },
-    data () {
-        return {
-
         }
     }
 }

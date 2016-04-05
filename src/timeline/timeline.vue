@@ -2,9 +2,11 @@
     <div class="timeline-wrapper" v-bind:class="{'is-loading': loading}">
         <div class="timeline-main" v-bind:style="{height: renderHeight + 'px'}">
             <timeline-tick v-for="tick in ticks" :tick="tick"></timeline-tick>
-            <timeline-triangle :pos="currentPos" :stepheight="param.stdStepHeight"></timeline-triangle>
-            <timeline-step v-for="event in events" :event="event" :pos="evPos[$index]" :currentpos="currentPos" :stepheight="param.stdStepHeight" v-on:select-event="eventSelected"></timeline-step>
-
+            <timeline-triangle :pos="trianglepos" :stepheight="param.stdStepHeight"></timeline-triangle>
+            <timeline-step v-for="event in events" :event="event" :pos="evPos[$index]" :currentevent="currentevent" :stepheight="param.stdStepHeight" v-on:select-event="eventSelected"></timeline-step>
+            <div class="player-wrapper" v-bind:style="{height: param.topPadding + 'px'}">
+                <button type="button" name="button" v-on:click="playSong(3135556)">Play Daft Punk</button>
+            </div>
             <div class="timeline-gradient"></div>
 
         </div>
@@ -15,6 +17,7 @@
 
 <script type="text/javascript">
 import moment from 'moment'
+import deezer from '../deezer.js'
 import timelineStep from './timelineStep.vue'
 import timelineTriangle from './timelineTriangle.vue'
 import timelineTick from './timelineTick.vue'
@@ -22,15 +25,15 @@ import timelineTick from './timelineTick.vue'
 export default {
     replace: true,
     components: {'timeline-step': timelineStep, 'timeline-triangle': timelineTriangle, 'timeline-tick': timelineTick},
-    props: ['events', 'loading'],
+    props: ['events', 'loading', 'currentevent'],
     methods: {
+        playSong: function (song) {deezer.playSong(song)},
         eventSelected: function (event) {
-            this.currentPos = this.evPos[this.events.indexOf(event)]
             this.$dispatch('event-select', event)
         },
         getEvent: function (date) {
             for (var ii = 0; ii < this.events.length; ii++) {
-                var evDate = moment(this.events[ii].date, 'YYYY-MM-DD')
+                var evDate = moment(this.events[ii].date)
                 if (evDate.diff(date, 'days') === 0) {
                     return this.events[ii]
                 }
@@ -47,13 +50,13 @@ export default {
             return null
         },
         generateTicks: function () {
-            return new Promise(function (resolve, reject) {
+            return new Promise((resolve, reject) => {
                 if (this.events.length > 1) {
                     var ii, firstDate, lastDate, totalHeight, wrapHeight, nbTicks, tickSpacing, ticks
                     // Find out the first and last events date
                     firstDate = lastDate = moment(this.events[0].date)
                     for (ii = 0; ii < this.events.length; ii++) {
-                        var evDate = moment(this.events[ii].date, 'YYYY-MM-DD')
+                        var evDate = moment(this.events[ii].date)
                         if (firstDate.diff(evDate) > 0) {
                             firstDate = evDate
                         } else if (lastDate.diff(evDate) < 0) {
@@ -79,14 +82,14 @@ export default {
                         // If by any chance there are as many events as ticks to be displayed !
                         tickSpacing = 0
                     } else {
-                        tickSpacing = Math.floor((wrapHeight - this.param.stdStepHeight * this.events.length) / (nbTicks - this.events.length))
+                        tickSpacing = (wrapHeight - this.param.stdStepHeight * this.events.length) / (nbTicks - this.events.length)
                     }
                 } else {
                     tickSpacing = this.param.stdTickSpacing
                 }
                 // Finally create ticks data
                 ticks = []
-                ticks.push({'date': firstDate.format('YYYY-MM-DD'), 'pos': 0})
+                ticks.push({'date': firstDate.format('YYYY-MM-DD'), 'pos': this.param.topPadding})
                 for (ii = 1; ii < nbTicks; ii++) {
                     if (this.getEvent(firstDate.clone().add(ii - 1, 'days'))) {
                         // If there is an event step at the previous tick
@@ -95,40 +98,48 @@ export default {
                         ticks.push({'date': firstDate.clone().add(ii, 'days').format('YYYY-MM-DD'), 'pos': ticks[ii - 1].pos + tickSpacing})
                     }
                 }
-                resolve({'ticks': ticks, 'totalHeight': totalHeight})
-            }.bind(this))
+                resolve({'ticks': ticks, 'totalHeight': totalHeight + this.param.topPadding})
+            })
         },
         generateEvPos: function () {
             var evPos = []
             for (var ii = 0; ii < this.events.length; ii++) {
-                var tick = this.getTick(moment(this.events[ii].date, 'YYYY-MM-DD'))
+                var tick = this.getTick(moment(this.events[ii].date))
                 if (tick) {evPos.push(tick.pos)}
             }
             return evPos
         }
     },
+    computed: {
+        trianglepos: function () {
+            if (this.currentevent) {
+                console.log(this.events.indexOf(this.currentevent))
+                return this.evPos[this.events.indexOf(this.currentevent)]
+            } else {
+                return 0
+            }
+        }
+    },
     create: function () {
         // evPos initialisation
         for (var ii = 0; ii < this.events.length; ii++) {
-            this.evPos.push(0)
+            this.evPos.push(this.param.topPadding)
         }
     },
     ready: function () {
-        this.generateTicks().then(function (success) {
+        this.generateTicks().then(success => {
             this.ticks = success.ticks
             this.renderHeight = success.totalHeight
             this.evPos = this.generateEvPos()
-            this.currentPos = this.evPos[0]
-        }.bind(this), function (error) {
+        }, (error) => {
             console.log(error.message)
         })
     },
     data () {
         return {
-            param: {stdTickSpacing: 6, stdStepHeight: 25, topPadding: 0},
+            param: {stdTickSpacing: 6, stdStepHeight: 25, topPadding: 50},
             renderHeight: 0,
             evPos: [],
-            currentPos: 0,
             ticks: []
         }
     }
@@ -161,6 +172,13 @@ export default {
 }
 .timeline-wrapper.is-loading .timeline-gradient {display: block;}
 .timeline-wrapper.is-loading .timeline-step-wrapper {display: none;}
+
+.player-wrapper {
+    position: absolute;
+    width: 100%;
+    background-color: yellow;
+    /*opacity: 0.5;*/
+}
 
 
 @keyframes movegrad {
