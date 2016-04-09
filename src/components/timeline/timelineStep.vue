@@ -1,26 +1,21 @@
 <template>
-    <a class="timeline-step-wrapper" v-bind:style="styleObject" v-on:click.prevent="clickDate(event)" v-bind:class="{'selected': currentevent === event}">
+    <a class="timeline-step-wrapper" v-bind:style="styleObject" v-on:click.prevent="clickEvent(event)" v-bind:class="{'selected': currentEvent === event}">
         <span class="timeline-date">{{date_formated}}</span>
     </a>
 </template>
 
 <script type="text/javascript">
 import moment from 'moment'
+import {clickEvent} from '../../vuex/actions'
 
 export default {
     replace: true,
-    props: ['event', 'currentevent', 'pos', 'stepheight'],
-    methods: {
-        clickDate: function (event) {
-            this.$dispatch('select-event', event)
-        }
-    },
-    created: function () {
-        var locale = window.navigator.userLanguage || window.navigator.language
-        moment.locale(locale)
-    },
-    events: {
-
+    props: ['event', 'pos', 'stepheight'],
+    vuex: {
+        getters: {
+            currentEvent: (state) => state.currentEvent
+        },
+        actions: {clickEvent}
     },
     computed: {
         date_formated: function () {
@@ -29,6 +24,9 @@ export default {
         styleObject: function () {
             return {'top': this.pos + 'px', 'height': this.stepheight + 'px'}
         }
+    },
+    created: function () {
+        moment.locale(window.navigator.userLanguage || window.navigator.language)
     }
 }
 

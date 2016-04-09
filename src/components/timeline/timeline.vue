@@ -1,9 +1,9 @@
 <template>
-    <div class="timeline-wrapper" v-bind:class="{'is-loading': loading}">
+    <div class="timeline-wrapper" v-bind:class="{'is-loading': appLoading}">
         <div class="timeline-main" v-bind:style="{height: renderHeight + 'px'}">
             <timeline-tick v-for="tick in ticks" :tick="tick"></timeline-tick>
             <timeline-triangle :pos="trianglepos" :stepheight="param.stdStepHeight"></timeline-triangle>
-            <timeline-step v-for="event in events" :event="event" :pos="evPos[$index]" :currentevent="currentevent" :stepheight="param.stdStepHeight" v-on:select-event="eventSelected"></timeline-step>
+            <timeline-step v-for="event in events" :event="event" :pos="evPos[$index]" :stepheight="param.stdStepHeight"></timeline-step>
             <div class="player-wrapper" v-bind:style="{height: param.topPadding + 'px'}">
                 <button type="button" name="button" v-on:click="playSong(3135556)">Play Daft Punk</button>
             </div>
@@ -17,7 +17,7 @@
 
 <script type="text/javascript">
 import moment from 'moment'
-import deezer from '../deezer.js'
+import deezer from '../../deezer'
 import timelineStep from './timelineStep.vue'
 import timelineTriangle from './timelineTriangle.vue'
 import timelineTick from './timelineTick.vue'
@@ -25,12 +25,15 @@ import timelineTick from './timelineTick.vue'
 export default {
     replace: true,
     components: {'timeline-step': timelineStep, 'timeline-triangle': timelineTriangle, 'timeline-tick': timelineTick},
-    props: ['events', 'loading', 'currentevent'],
+    vuex: {
+        getters: {
+            appLoading: (state) => state.appLoading,
+            currentEvent: (state) => state.currentEvent,
+            events: (state) => state.events
+        }
+    },
     methods: {
         playSong: function (song) {deezer.playSong(song)},
-        eventSelected: function (event) {
-            this.$dispatch('event-select', event)
-        },
         getEvent: function (date) {
             for (var ii = 0; ii < this.events.length; ii++) {
                 var evDate = moment(this.events[ii].date)
@@ -112,9 +115,8 @@ export default {
     },
     computed: {
         trianglepos: function () {
-            if (this.currentevent) {
-                console.log(this.events.indexOf(this.currentevent))
-                return this.evPos[this.events.indexOf(this.currentevent)]
+            if (this.currentEvent) {
+                return this.evPos[this.events.indexOf(this.currentEvent)]
             } else {
                 return 0
             }

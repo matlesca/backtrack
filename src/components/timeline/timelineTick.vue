@@ -14,8 +14,7 @@ export default {
     props: ['tick'],
     created: function () {
         // Setup the style objects depending on the tick date..
-        var locale = window.navigator.userLanguage || window.navigator.language
-        moment.locale(locale)
+        moment.locale(window.navigator.userLanguage || window.navigator.language)
         var momDate = moment(this.tick.date, 'YYYY-MM-DD')
         this.styleTick = {top: this.tick.pos + 'px'}
         if (momDate.date() === 1 && momDate.month() === 0) {

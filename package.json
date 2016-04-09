@@ -14,7 +14,8 @@
     "three": "^0.74.0",
     "vue": "^1.0.8",
     "vue-resource": "^0.7.0",
-    "vue-router": "^0.7.6"
+    "vue-router": "^0.7.6",
+    "vuex": "^0.6.2"
   },
   "devDependencies": {
     "vue-loader": "^7.0.3",

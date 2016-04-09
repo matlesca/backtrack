@@ -3,7 +3,7 @@
         <div class="event-grid" v-bind:id="'event-grid-' + index">
             <div class="event-panel" v-for="panel in myGrid.panels" v-bind:style="panel.styleObj">
                 <span v-if="panel.type === 'text'">{{panel.text}}</span>
-                <img v-bind:class="'img-' + index" class="event-panel-img" v-if="panel.type === 'image'" v-bind:src="panel.src"/>
+                <img v-bind:class="'img-' + index" class="event-panel-img" v-if="panel.type === 'image' && focus" v-bind:src="panel.src"/>
             </div>
         </div>
     </div>
@@ -13,14 +13,41 @@
 import moment from 'moment'
 import imagesLoaded from 'imagesloaded'
 import Masonry from 'masonry-layout'
+import {setEventLoading} from '../../vuex/actions'
 
 export default {
     replace: true,
     props: ['event', 'index', 'zpos', 'cosmos'],
+    vuex: {
+        getters: {
+            currentEvent: (state) => state.currentEvent
+        },
+        actions: {setEventLoading}
+    },
+    watch: {
+        currentEvent: function (newVal) {
+            if (newVal === this.event) {
+                if (!this.focus) {
+                    this.focus = true
+                    this.setEventLoading(true)
+                    imagesLoaded('.img-' + this.index, () => {
+                        this.msnry = new Masonry('#event-grid-' + this.index, {itemSelector: '.event-panel', columnWidth: 10})
+                        this.setEventLoading(false)
+                    })
+                }
+            }
+        },
+        cosmos: function () {
+            if (!this.loaded && this.cosmos) {
+                this.cosmos.addGrid(this.myGrid).then(() => {
+                    this.loaded = true
+                })
+            }
+        }
+    },
     computed: {
         myGrid: function () {
             var jj, retObj, textLocale
-            moment.locale(this.locale)
             if (this.locale === 'fr') {textLocale = 'fr'} else {textLocale = 'en'}
             retObj = {}
             retObj.zpos = this.zpos
@@ -90,23 +117,14 @@ export default {
             return retObj
         }
     },
-    methods: {
-            init: function () {
-                // aa
-            }
-    },
-    ready: function () {
-        imagesLoaded('.img-' + this.index, () => {
-            this.msnry = new Masonry('#event-grid-' + this.index, {itemSelector: '.event-panel', columnWidth: 10})
-            this.cosmos.addGrid(this.myGrid).then(() => {
-                this.$dispatch('event-grid-loaded', this.event)
-            })
-        })
+    created: function () {
+        moment.locale(window.navigator.userLanguage || window.navigator.language)
     },
     data () {
         return {
             msnry: {},
-            locale: window.navigator.userLanguage || window.navigator.language
+            focus: false,
+            loaded: false
         }
     }
 }

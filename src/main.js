@@ -1,13 +1,14 @@
 import Vue from 'vue'
-import app from './app.vue'
 import VueRouter from 'vue-router'
+import VueResource from 'vue-resource'
+import app from './components/app.vue'
 
 import './styles.css'
 
 Vue.config.debug = process.env.NODE_ENV !== 'production'
 
 Vue.use(VueRouter)
-Vue.use(require('vue-resource'))
+Vue.use(VueResource)
 
 const router = new VueRouter({
   hashbang: false

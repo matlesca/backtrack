@@ -6,11 +6,11 @@ export default function (elemQuery) {
     // Initialisation :
     var that = this
     this.elem = document.querySelector(elemQuery)
-    this.animating = false
     this.init = function (depth) {
         // Create cosmos elements
         that.labels = []
         that.grids = []
+        that.moveTween = false
         that.scene = new THREE.Scene()
         that.scene.fog = new THREE.Fog(0x282828, 0, 2000)
         that.scene2 = new THREE.Scene()
@@ -49,7 +49,7 @@ export default function (elemQuery) {
         var tab = []
         var curve, geometry, material
         for (var zpos = 0; zpos < depth + 1000; zpos += 300) {
-            tab.push(new THREE.Vector3(Math.random() * 600 - 300, Math.random() * 600 - 300, zpos))
+            tab.push(new THREE.Vector3(Math.random() * 400 - 200, Math.random() * 400 - 200, zpos))
         }
         curve = new THREE.CatmullRomCurve3(tab)
         geometry = new THREE.Geometry()
@@ -116,30 +116,36 @@ export default function (elemQuery) {
     function hideLabels () {
         for (var ii = 0; ii < that.labels.length; ii++) {
             if (that.labels[ii].element.style.opacity > 0) {
-                new TWEEN.Tween(that.labels[ii].element.style).to({opacity: 0}, 300).easing(TWEEN.Easing.Cubic.InOut).start()
+                new TWEEN.Tween(that.labels[ii].element.style, {override: true}).to({opacity: 0}, 300).easing(TWEEN.Easing.Cubic.InOut).start()
             }
         }
     }
     function hideGrids () {
         for (var ii = 0; ii < that.grids.length; ii++) {
             if (that.grids[ii].element.style.opacity > 0) {
-                new TWEEN.Tween(that.grids[ii].element.style).to({opacity: 0}, 300).easing(TWEEN.Easing.Cubic.InOut).start()
+                new TWEEN.Tween(that.grids[ii].element.style, {override: true}).to({opacity: 0}, 300).easing(TWEEN.Easing.Cubic.InOut).start()
             }
         }
     }
     this.moveTo = function (zpos) {
-        if (that.animating === false && getGrid(zpos)) {
-            var duration = 1000 + Math.floor(Math.abs(that.camera.position.z - zpos) / 10)
-            that.animating = true
-            hideGrids()
-            new TWEEN.Tween(that.camera.position).to({z: zpos - 520}, duration).easing(TWEEN.Easing.Cubic.InOut).onUpdate(function () {
-                updateLabelsOpacity()
-            }).onComplete(function () {
-                that.animating = false
-            }).start()
-            window.setTimeout(hideLabels, duration - 290)
-            new TWEEN.Tween(getGrid(zpos).element.style).delay(duration - 1000).to({opacity: 1}, 1000).easing(TWEEN.Easing.Cubic.InOut).start()
-        }
+        return new Promise((resolve, reject) => {
+            if (getGrid(zpos)) {
+                var duration = 1000 + Math.floor(Math.abs(that.camera.position.z - zpos) / 10)
+                hideGrids()
+                TWEEN.remove(that.moveTween)
+                that.moveTween = new TWEEN.Tween(that.camera.position, {override: true})
+                    .to({z: zpos - 520}, duration).easing(TWEEN.Easing.Cubic.InOut)
+                    .onUpdate(function () {
+                        updateLabelsOpacity()
+                    }).onComplete(function () {
+                        resolve()
+                    }).start()
+                window.setTimeout(hideLabels, duration - 290)
+                new TWEEN.Tween(getGrid(zpos).element.style, {override: true}).delay(duration - 1000).to({opacity: 1}, 1000).easing(TWEEN.Easing.Cubic.InOut).start()
+            } else {
+                reject({message: 'No grid was added at this position yet'})
+            }
+        })
     }
     this.addElem = function (selector) {
         var elemObj = new THREE.CSS3DObject(document.querySelector(selector))
@@ -150,7 +156,7 @@ export default function (elemQuery) {
         that.scene2.add(elemObj)
     }
     this.tickCamera = function (event, depth) {
-        if (that.animating === false && (event.keyCode === 38 || event.keyCode === 40)) {
+        if (event.keyCode === 38 || event.keyCode === 40) {
             event.preventDefault()
             if (event.keyCode === 38 && that.camera.position.z < depth) {that.camera.position.z += 50} else if (event.keyCode === 40 && that.camera.position.z > 0) {that.camera.position.z -= 50}
         }

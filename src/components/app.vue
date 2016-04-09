@@ -1,9 +1,7 @@
 <template>
     <div class="main-wrapper">
-        <navbar :loading="loading" v-on:loading-switch="loadingSwitched"></navbar>
-
-
-        <timeline :events="events" :currentevent="currentEvent" :loading="loading" v-on:event-select="eventSelected"></timeline>
+        <navbar></navbar>
+        <timeline></timeline>
 
         <!-- <br><button type="button" name="button" v-on:click="loginDeezer()">Loggin to Deezer</button>
         <br><button type="button" name="button" v-on:click="getLastSongs()">Load 50 last played songs</button>
@@ -11,7 +9,7 @@
         <li v-for="song in lastSongs">{{song.title}} played on the : {{song.date}}</li>
     </ul> -->
 
-    <cosmos :events="events" :currentevent="currentEvent"></cosmos>
+    <cosmos></cosmos>
 
     <!-- DEEZER root info place -->
     <div id="dz-root"></div>
@@ -22,21 +20,19 @@
 <script>
 import timeline from './timeline/timeline.vue'
 import cosmos from './cosmos/cosmos.vue'
-import deezer from './deezer.js'
+import deezer from '../deezer.js'
 import navbar from './navbar.vue'
-import loadEvents from './events.json'
+import store from '../vuex/store'
 
 export default {
     replace: false,
     components: {timeline, cosmos, navbar},
+    store: store,
+    vuex: {
+        getters: {events: (state) => state.events}
+    },
     methods: {
         loginDeezer: deezer.login,
-        eventSelected: function (event) {
-            this.currentEvent = event
-        },
-        loadingSwitched: function (event) {
-            this.loading = event
-        },
         getLastSongs: function () {
             if (!this.lastSongs) {
                 this.lastSongs = []
@@ -64,14 +60,13 @@ export default {
     data () {
         return {
             currentEvent: {},
+            deezer: deezer,
             lastSongRank: 0,
             lastSongs: '',
             featArtist: '',
             toDay: false,
             delta: 0,
-            maxDate: 0,
-            events: loadEvents,
-            loading: false
+            maxDate: 0
         }
     }
 }

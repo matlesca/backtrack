@@ -24,7 +24,9 @@
 
 <script type="text/javascript">
   export default {
-    props: ['loading']
+      vuex: {
+          getters: {loading: (state) => state.appLoading || state.eventLoading || state.animating}
+      }
   }
 
 </script>

@@ -1,8 +1,8 @@
 <template>
   <div class="navbar-wrapper">
-    <button class="nav-main-btn" type="button" v-on:click.prevent="clickMenu()">
-      <app-logo class="top-logo" :loading="loading"></app-logo>
-      <span class="nav-burger" v-if="!loading"><span></span></span>
+    <button class="nav-main-btn" type="button" v-on:click.prevent="toggleLoading()">
+      <app-logo class="top-logo"></app-logo>
+      <span class="nav-burger"><span></span></span>
     </button>
   </div>
 
@@ -10,26 +10,13 @@
 
 <script type="text/javascript">
   import applogo from './applogo.vue'
+  import {toggleLoading} from '../vuex/actions'
 
   export default {
     replace: true,
     components: {'app-logo': applogo},
-    props: ['loading'],
-    methods: {
-        clickMenu: function () {
-            this.$dispatch('loading-switch', !this.loading)
-        }
-    },
-    created: function () {
-
-    },
-    events: {
-
-    },
-    data () {
-      return {
-        // loading: false
-      }
+    vuex: {
+        actions: {toggleLoading}
     }
   }
 
