@@ -46,7 +46,7 @@ export default {
         left:0; width: 100%; height: 2px;
         text-align: center;
     }
-    .timeline-wrapper:hover .timeline-tick {display: block;}
+    .sidebar-wrapper:hover .timeline-tick {display: block;}
     .timeline-tick .tick-left, .timeline-tick .tick-right {position: absolute; top:0; height: 100%; background-color: #636b77;}
     .timeline-tick .tick-left {left: 0;}
     .timeline-tick .tick-right {right: 0;}

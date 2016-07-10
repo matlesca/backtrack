@@ -29,12 +29,14 @@ export default {
             if (newVal === this.event) {
                 if (!this.focus) {
                     this.focus = true
-                    this.setEventLoading(true)
-                    imagesLoaded('.img-' + this.index, () => {
+                }
+                this.setEventLoading(true)
+                imagesLoaded('.img-' + this.index, () => {
+                    setTimeout(() => {
                         this.msnry = new Masonry('#event-grid-' + this.index, {itemSelector: '.event-panel', columnWidth: 10})
                         this.setEventLoading(false)
-                    })
-                }
+                    }, 100)
+                })
             }
         },
         cosmos: function () {
@@ -64,7 +66,7 @@ export default {
                     'fontSize': 70 - Math.min(40, Math.round(this.event.title[textLocale].length - 25 + 20 * Math.random())) + 'px',
                     'fontWeight': 'bold',
                     'fontStyle': 'italic',
-                    'maxWidth': Math.round(20 + 20 * Math.random()) + '%',
+                    'maxWidth': Math.round(25 + 10 * Math.random()) + '%',
                     'margin': Math.round(5 + 3 * Math.random()) + 'px'
                 }
             })
@@ -73,7 +75,8 @@ export default {
                 'type': 'text',
                 'text': moment(this.event.date).format('L'),
                 'styleObj': {
-                    'color': '#ffffff',
+                    'color': '#E0E3DA',
+                    'fontFamily': 'Raleway, Helvetica, sans-serif',
                     'backgroundColor': 'transparent',
                     'fontSize': 90 - Math.round(30 * Math.random()) + 'px',
                     'maxWidth': '100%',
@@ -88,11 +91,12 @@ export default {
                         'type': 'text',
                         'text': this.event.panels[jj].text[textLocale],
                         'styleObj': {
-                            'color': randVal < 0.5 ? 'white' : 'black',
-                            'backgroundColor': randVal < 0.5 ? 'transparent' : 'rgb(' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ')',
+                            'color': randVal < 0.5 ? '#FEFCEA' : 'black',
+                            'backgroundColor': randVal < 0.5 ? 'transparent' : 'rgb(' + (255 - Math.round(50 * randVal)) + ',' + (255 - Math.round(50 * randVal)) + ',' + (255 - Math.round(50 * randVal)) + ')',
                             'fontSize': Math.round(18 + 4 * Math.random()) + 'px',
                             'fontFamily': 'Roboto, Helvetica, sans-serif',
-                            'maxWidth': Math.round(30 + 15 * Math.random()) + '%',
+                            // 'fontFamily': 'Palatino Linotype, serif',
+                            'maxWidth': Math.round(30 + 10 * Math.random()) + '%',
                             'margin': Math.round(5 + 3 * Math.random()) + 'px'
                         }
                     })
@@ -103,11 +107,24 @@ export default {
                         'type': 'image',
                         'src': this.event.panels[jj].src,
                         'styleObj': {
-                            'backgroundColor': randVal < 0.5 ? 'transparent' : 'rgb(' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ',' + (255 - Math.round(100 * randVal)) + ')',
+                            'backgroundColor': 'rgb(' + (Math.round(30 * randVal)) + ',' + (Math.round(30 * randVal)) + ',' + (Math.round(30 * randVal)) + ')',
                             // set a width and not a maxWidth so that masonry renders properly event if the image isn't yet loaded
-                            'width': Math.round(30 + 10 * Math.random()) + '%',
+                            'width': Math.round(25 + 10 * Math.random()) + '%',
                             'padding': Math.round(5 + 5 * Math.random()) + 'px',
                             'margin': Math.round(5 + 3 * Math.random()) + 'px'
+                        }
+                    })
+                }
+            }
+            // Add randomly a few more empty panels :
+            for (jj = 0; jj < 4; jj++) {
+                if (Math.random() > 0.5) {
+                    retObj.panels.push({
+                        'type': 'empty',
+                        'styleObj': {
+                            'background': 'transparent',
+                            'width': Math.round(15 + 10 * Math.random()) + '%',
+                            'height': Math.round(40 + 60 * Math.random()) + 'px'
                         }
                     })
                 }
@@ -122,7 +139,7 @@ export default {
     },
     data () {
         return {
-            msnry: {},
+            msnry: false,
             focus: false,
             loaded: false
         }

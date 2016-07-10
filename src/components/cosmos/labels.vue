@@ -52,7 +52,7 @@ export default {
             return daysTab.map((date, ii) => {
                 return {
                     'elemId': 'month-label-' + ii,
-                    'xpos': -400,
+                    'xpos': -200,
                     'ypos': 350,
                     'zpos': this.getZPos(date),
                     'text': date.format('MMMM YYYY')
@@ -74,17 +74,17 @@ export default {
 <style>
 
 .month-label {
-    font-size: 80px;
-    color: #ffffff;
+    font-size: 85px;
+    color: #A493C6;
     opacity: 0;
     text-transform: capitalize;
-    font-family: 'Roboto', 'Helvetica', sans-serif
+    font-family: 'Raleway', 'Helvetica', sans-serif;
 }
 #start-tooltip {
     font-size: 40px;
     color: #ffffff;
     opacity: 1;
-    font-family: 'Roboto', 'Helvetica', sans-serif
+    font-family: 'Raleway', 'Helvetica', sans-serif;
 }
 
 </style>

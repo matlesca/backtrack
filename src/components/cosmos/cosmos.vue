@@ -11,7 +11,7 @@ import Cosmos from './cosmosRendering.js'
 import eventGrid from './eventGrid.vue'
 import labels from './labels.vue'
 import moment from 'moment'
-import {setAnimating} from '../../vuex/actions'
+import {setMoving} from '../../vuex/actions'
 
 export default {
     // replace: false,
@@ -19,9 +19,11 @@ export default {
     vuex: {
         getters: {
             events: (state) => state.events,
-            currentEvent: (state) => state.currentEvent
+            currentEvent: (state) => state.currentEvent,
+            bckCol: (state) => state.bckCol,
+            randKey: (state) => state.randKey
         },
-        actions: {setAnimating}
+        actions: {setMoving}
     },
     methods: {
         getZPos: function (date) {
@@ -31,8 +33,8 @@ export default {
     },
     watch: {
         currentEvent: function (newVal) {
-            this.setAnimating(true)
-            this.myCosmos.moveTo(this.getZPos(newVal.date)).then(() => {this.setAnimating(false)})
+            this.setMoving(true)
+            this.myCosmos.moveTo(this.getZPos(newVal.date)).then(() => {this.setMoving(false)})
         }
     },
     computed: {
@@ -54,8 +56,9 @@ export default {
         }
     },
     ready: function () {
-        this.myCosmos = new Cosmos('.cosmos-main')
-        this.myCosmos.init(this.getZPos(this.evdates.lastDate))
+        var depth = this.getZPos(this.evdates.lastDate)
+        this.myCosmos = new Cosmos('.cosmos-main', this.bckCol, this.randKey)
+        this.myCosmos.init(depth, true, Math.floor(depth / 60))
     },
     data () {
         return {

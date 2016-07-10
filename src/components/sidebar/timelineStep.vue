@@ -48,10 +48,10 @@ export default {
 
 .timeline-date {
     opacity:0; transition: opacity 0.1s;
-    color: #364559; font-size: 14pt;
-    font-family: 'Roboto', 'Helvetica', sans-serif;
+    color: #364559; font-size: 15pt;
+    font-family: 'Roboto Condensed', 'Helvetica', sans-serif;
     font-style: italic;
 }
-.timeline-wrapper:hover .timeline-date {opacity: 1;}
+.sidebar-wrapper:hover .timeline-date {opacity: 1;}
 
 </style>

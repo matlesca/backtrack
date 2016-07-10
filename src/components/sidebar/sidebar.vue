@@ -1,30 +1,28 @@
 <template>
-    <div class="timeline-wrapper" v-bind:class="{'is-loading': appLoading}">
+    <div class="sidebar-wrapper" v-bind:class="{'is-loading': appLoading}">
+        <player :toppad="param.topPadding"></player>
         <div class="timeline-main" v-bind:style="{height: renderHeight + 'px'}">
             <timeline-tick v-for="tick in ticks" :tick="tick"></timeline-tick>
             <timeline-triangle :pos="trianglepos" :stepheight="param.stdStepHeight"></timeline-triangle>
             <timeline-step v-for="event in events" :event="event" :pos="evPos[$index]" :stepheight="param.stdStepHeight"></timeline-step>
-            <div class="player-wrapper" v-bind:style="{height: param.topPadding + 'px'}">
-                <button type="button" name="button" v-on:click="playSong(3135556)">Play Daft Punk</button>
-            </div>
-            <div class="timeline-gradient"></div>
 
         </div>
     </div>
+    <div class="sidebar-gradient" v-bind:class="{'is-loading': appLoading}"></div>
 
 
 </template>
 
 <script type="text/javascript">
 import moment from 'moment'
-import deezer from '../../deezer'
 import timelineStep from './timelineStep.vue'
 import timelineTriangle from './timelineTriangle.vue'
 import timelineTick from './timelineTick.vue'
+import player from './player.vue'
 
 export default {
     replace: true,
-    components: {'timeline-step': timelineStep, 'timeline-triangle': timelineTriangle, 'timeline-tick': timelineTick},
+    components: {'timeline-step': timelineStep, 'timeline-triangle': timelineTriangle, 'timeline-tick': timelineTick, player},
     vuex: {
         getters: {
             appLoading: (state) => state.appLoading,
@@ -33,7 +31,6 @@ export default {
         }
     },
     methods: {
-        playSong: function (song) {deezer.playSong(song)},
         getEvent: function (date) {
             for (var ii = 0; ii < this.events.length; ii++) {
                 var evDate = moment(this.events[ii].date)
@@ -139,7 +136,7 @@ export default {
     },
     data () {
         return {
-            param: {stdTickSpacing: 6, stdStepHeight: 25, topPadding: 50},
+            param: {stdTickSpacing: 6, stdStepHeight: 25, topPadding: 60},
             renderHeight: 0,
             evPos: [],
             ticks: []
@@ -150,37 +147,34 @@ export default {
 </script>
 
 <style>
-.timeline-wrapper {
-    z-index: 999;
-    overflow-x: hidden; overflow-y: scroll;
+.sidebar-wrapper {
+    z-index: 555;
+    overflow: hidden;
+    margin: 0; padding: 0;
     position: fixed; top:0; right:0;
     width: 200px; height:100%;
     background-color: none;
 }
+.sidebar-wrapper:hover {overflow-y: scroll; overflow-x: hidden;}
 .timeline-main {
     position: absolute; right:0;
+    overflow: hidden;
     width: 30px; min-height:100%; margin:0; padding: 0;
     transition: width 0.1s ease;
     background-color: #576271;
 }
-.timeline-wrapper:hover .timeline-main {width:100%;}
-.timeline-gradient {
-    display:none;
-    width:100%; height:200%;
-    top:0;transform:translateY(-50%);
+.sidebar-wrapper:hover .timeline-main {width:100%;}
+.sidebar-gradient {
+    z-index: 999;
+    display:none; position: fixed; top:0; right: 0;
+    width:30px; height: 200%;
+    transform:translateY(-50%);
     background: linear-gradient(0deg, #576271, #A493C6, #576271);
     background-size: 100% 50%;
     animation: movegrad 0.8s linear infinite;
 }
-.timeline-wrapper.is-loading .timeline-gradient {display: block;}
-.timeline-wrapper.is-loading .timeline-step-wrapper {display: none;}
-
-.player-wrapper {
-    position: absolute;
-    width: 100%;
-    background-color: yellow;
-    /*opacity: 0.5;*/
-}
+.sidebar-gradient.is-loading {display: block;}
+.sidebar-wrapper.is-loading {display: none;}
 
 
 @keyframes movegrad {

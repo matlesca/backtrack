@@ -11,16 +11,31 @@ export default {
         })
     },
     login: function () {
-        DZ.login(function (response) {
-            if (response.authResponse) {
-                console.log('Welcome!  Fetching your information.... ' + response.authResponse.accessToken)
-                DZ.api('/user/me', function (response) {
-                    console.log('Good to see you, ' + response.name + '.')
-                })
-            } else {
-                console.log('User cancelled login or did not fully authorize.')
-            }
-        }, {perms: 'basic_access, email, listening_history'})
+        return new Promise(function (resolve, reject) {
+            DZ.login(function (response) {
+                if (response.authResponse) {
+                    console.log('Welcome!  Fetching your information.... ' + response.authResponse.accessToken)
+                    DZ.api('/user/me', function (response) {
+                        console.log('Good to see you, ' + response.name + '.')
+                    })
+                    resolve(response)
+                } else {
+                    reject({'message': 'User cancelled login or did not fully authorize.'})
+                }
+            }, {perms: 'basic_access, email, listening_history'})
+        })
+    },
+    isAuth: function () {
+        return new Promise(function (resolve, reject) {
+            DZ.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    console.log(response.authResponse)
+                    resolve(response)
+                } else {
+                    reject({'message': 'User cancelled login or did not fully authorize.'})
+                }
+            })
+        })
     },
     getSongs: function (index, limit) {
         return new Promise(function (resolve, reject) {

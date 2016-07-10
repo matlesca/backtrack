@@ -1,29 +1,32 @@
 /*global THREE*/
 // import THREE from 'three'
 import TWEEN from 'tween.js'
-
-export default function (elemQuery) {
+import StarSystem from './starSystem.js'
+import CloudSystem from './cloudSystem.js'
+export default function (elemQuery, bckCol, randKey) {
     // Initialisation :
     var that = this
     this.elem = document.querySelector(elemQuery)
-    this.init = function (depth) {
-        // Create cosmos elements
-        that.labels = []
-        that.grids = []
-        that.moveTween = false
+    this.bckColor = bckCol
+    this.randKey = randKey
+    this.labels = []
+    this.grids = []
+    this.isAnim = false
+    this.moveTween = false
+    // Setup scene, fog, camera & renderer :
+    setupScene()
+    // Gradient in the background :
+    makeBackground()
+    function setupScene () {
         that.scene = new THREE.Scene()
-        that.scene.fog = new THREE.Fog(0x282828, 0, 2000)
+        that.scene.fog = new THREE.Fog(that.bckColor, 0, 3000)
         that.scene2 = new THREE.Scene()
         that.camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 3000)
-        that.particleSystem = makeParticles(depth)
-        that.line = makeLine(depth)
-        // Add elems to the scene
         that.scene.add(that.camera)
-        that.scene.add(that.particleSystem)
-        that.scene.add(that.line)
         // WebGL Renderer for line & particules
         that.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true})
         that.renderer.setSize(window.innerWidth, window.innerHeight)
+        that.renderer.setClearColor(0x282828, 0)
         that.elem.appendChild(that.renderer.domElement)
         // CSS Renderer for labels
         that.renderer2 = new THREE.CSS3DRenderer()
@@ -34,21 +37,118 @@ export default function (elemQuery) {
         that.elem.appendChild(that.renderer2.domElement)
         // Param a few tweaks
         that.camera.lookAt(new THREE.Vector3(0, 0, 1))
-        window.addEventListener('keydown', function (ev) {return that.tickCamera(ev, depth)})
+    }
+    this.init = function (depth, isLine, nPart) {
+        // Create cosmos elements
+        that.depth = depth
+        that.nPart = nPart
+        if (isLine) {
+            that.line = makeLine(depth)
+            that.scene.add(that.line)
+        }
+        that.particleSystems = makeParticles(depth, nPart, 5)
+        that.particleSystems.forEach(sys => that.scene.add(sys))
+        that.cloudSystems = makeClouds(depth, Math.round(nPart * 2.5), 4)
+        that.cloudSystems.forEach(sys => that.scene.add(sys))
         update()
     }
-    function makeParticles (depth) {
-        var geometry = new THREE.Geometry()
-        var material = new THREE.PointsMaterial({color: 0xffffff, size: 30})
-        for (var zpos = 0; zpos < depth + 3000; zpos += 20) {
-            geometry.vertices.push(new THREE.Vector3(Math.random() * 4000 - 2000, Math.random() * 4000 - 2000, zpos))
+    function update (time) {
+        window.requestAnimationFrame(update)
+        TWEEN.update(time)
+        if (that.isAnim) {
+            that.moveParticles(10)
         }
-        return new THREE.Points(geometry, material)
+        that.renderer.render(that.scene, that.camera)
+        that.renderer2.render(that.scene2, that.camera)
+    }
+    function makeParticles (depth, nPart, nSys) {
+        var tab = []
+        for (var ss = 0; ss < nSys; ss++) {
+            tab.push(new StarSystem(ss, nSys, depth + 3000, Math.floor(nPart / nSys)))
+            // shader.lensFlareTab.forEach(lens => {pointsTab.push(lens)})
+        }
+        return tab
+    }
+    function makeClouds (depth, nPart, nSys) {
+        var tab = []
+        for (var ss = 0; ss < nSys; ss++) {
+            tab.push(new CloudSystem(that.scene, ss, nSys, depth + 3000, Math.floor(nPart / nSys)))
+        }
+        return tab
+    }
+    function makeBackground () {
+        var canvas = document.createElement('canvas')
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+        var context = canvas.getContext('2d')
+        var gradient = context.createLinearGradient(canvas.width / 2, 0, Math.floor((0.35 + 0.3 * that.randKey) * canvas.width), canvas.height)
+        gradient.addColorStop(0.2, '#282828')
+        gradient.addColorStop(1, that.bckColor)
+        context.fillStyle = gradient
+        context.fillRect(0, 0, canvas.width, canvas.height)
+
+        that.elem.style.background = 'url(' + canvas.toDataURL('image/png') + ')'
+        that.elem.style.backgroundSize = '100% 100%'
+    }
+    this.moveParticles = function (zz) {
+        var positions
+        if (that.isAnim) {
+            that.particleSystems.forEach(sys => {
+                if (sys.geometry) {
+                    positions = sys.geometry.attributes.position.array
+                    for (var ii = 0; ii < positions.length; ii += 3) {
+                        if (positions[ii + 2] < zz) {
+                            positions[ii + 2] = that.depth + 3000
+                            positions[ii + 0] = Math.random() * 4000 - 2000
+                            positions[ii + 1] = Math.random() * 4000 - 2000
+                        } else {
+                            positions[ii + 2] -= zz
+                        }
+                        if (positions[ii + 2] > 2500) {
+                            sys.geometry.attributes.alpha.array[Math.floor(ii / 3)] = 0.9 * (3000 - positions[ii + 2]) / 500
+                        } else {
+                            sys.geometry.attributes.alpha.array[Math.floor(ii / 3)] = 0.9
+                        }
+                    }
+                    sys.geometry.attributes.position.needsUpdate = true
+                    sys.geometry.attributes.alpha.needsUpdate = true
+                }
+            })
+            that.cloudSystems.forEach(sys => {
+                if (sys.geometry) {
+                    positions = sys.geometry.attributes.position.array
+                    for (var ii = 0; ii < positions.length; ii += 3) {
+                        if (positions[ii + 2] < 0) {
+                            positions[ii + 2] = that.depth + 3000
+                            positions[ii + 0] = Math.random() * 8000 - 4000
+                            positions[ii + 1] = -Math.random() * Math.random() * 800 - 800
+                        } else {
+                            positions[ii + 2] -= zz
+                        }
+                        if (positions[ii + 2] > 2500) {
+                            sys.geometry.attributes.alpha.array[Math.floor(ii / 3)] = 0.9 * (3000 - positions[ii + 2]) / 500
+                        } else {
+                            var factor
+                            if (Math.abs(positions[ii + 0]) > 3000) {
+                                factor = (positions[ii + 2] - 2000) / 500
+                            } else if (Math.abs(positions[ii + 0]) > 2000) {
+                                factor = (Math.min(2000, positions[ii + 2]) - 1100) / 900
+                            } else {
+                                factor = (Math.min(1800, positions[ii + 2]) - 200) / 1600
+                            }
+                            sys.geometry.attributes.alpha.array[Math.floor(ii / 3)] = Math.max(0.9 * factor, 0)
+                        }
+                    }
+                    sys.geometry.attributes.position.needsUpdate = true
+                    sys.geometry.attributes.alpha.needsUpdate = true
+                }
+            })
+        }
     }
     function makeLine (depth) {
         var tab = []
         var curve, geometry, material
-        for (var zpos = 0; zpos < depth + 1000; zpos += 300) {
+        for (var zpos = 0; zpos < depth + 1000; zpos += 600) {
             tab.push(new THREE.Vector3(Math.random() * 400 - 200, Math.random() * 400 - 200, zpos))
         }
         curve = new THREE.CatmullRomCurve3(tab)
@@ -96,12 +196,6 @@ export default function (elemQuery) {
             resolve()
         })
     }
-    function update (time) {
-        window.requestAnimationFrame(update)
-        TWEEN.update(time)
-        that.renderer.render(that.scene, that.camera)
-        that.renderer2.render(that.scene2, that.camera)
-    }
     function updateLabelsOpacity () {
         for (var ii = 0; ii < that.labels.length; ii++) {
             if (that.labels[ii].position.z > that.camera.position.z + 3000) {
@@ -146,19 +240,5 @@ export default function (elemQuery) {
                 reject({message: 'No grid was added at this position yet'})
             }
         })
-    }
-    this.addElem = function (selector) {
-        var elemObj = new THREE.CSS3DObject(document.querySelector(selector))
-        elemObj.position.x = 0
-        elemObj.position.y = 0
-        elemObj.position.z = that.camera.position.z + 2000
-        elemObj.rotation.y = Math.PI
-        that.scene2.add(elemObj)
-    }
-    this.tickCamera = function (event, depth) {
-        if (event.keyCode === 38 || event.keyCode === 40) {
-            event.preventDefault()
-            if (event.keyCode === 38 && that.camera.position.z < depth) {that.camera.position.z += 50} else if (event.keyCode === 40 && that.camera.position.z > 0) {that.camera.position.z -= 50}
-        }
     }
 }
