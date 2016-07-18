@@ -13,7 +13,7 @@
 import moment from 'moment'
 import imagesLoaded from 'imagesloaded'
 import Masonry from 'masonry-layout'
-import {setEventLoading} from '../../vuex/actions'
+import {setEventLoading} from '../../vuex/ui_actions'
 
 export default {
     replace: true,

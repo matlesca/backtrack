@@ -1,26 +1,26 @@
 <template>
     <div class="main-wrapper">
+        <!-- DEEZER root info place -->
+        <div id="dz-root"></div>
 
         <router-view></router-view>
 
     </div>
 
-    <!-- DEEZER root info place -->
-    <div id="dz-root"></div>
 </template>
 
 <script>
 import store from '../vuex/store'
-import {init} from '../vuex/actions'
+import {initApp} from '../vuex/dz_actions'
 
 export default {
     replace: false,
     store,
     vuex: {
-        actions: {init}
+        actions: {initApp}
     },
     ready: function () {
-        this.init()
+        this.initApp()
     }
 }
 

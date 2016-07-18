@@ -1,7 +1,8 @@
 [
     {
+        "id": "terroparis131115",
         "title": {"en": "Terrorist attacks in Paris", "fr": "Attaques terroristes à Paris"},
-        "default": true,
+        "visible": true,
         "type": "article",
         "category": "society",
         "date": "2015-11-13",
@@ -16,9 +17,10 @@
         ]
     },
     {
+        "id": "macronlaw261015",
         "title": {"en": "Emmanuel Macron presents its law project for economy in France",
             "fr": "Emmanuel Macron présente son projet de loi pour l'économie."},
-        "default": true,
+        "visible": true,
         "type": "article",
         "category": "politics",
         "date": "2015-10-26",
@@ -33,8 +35,9 @@
         ]
     },
     {
+        "id": "smashiha100616",
         "title": {"en": "Smashing Pumpkins reunited with James Iha", "fr": "James Iha réintègre les Smashing Pumpkins"},
-        "default": true,
+        "visible": true,
         "type": "article",
         "category": "culture",
         "date": "2016-06-10",

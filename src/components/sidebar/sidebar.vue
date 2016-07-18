@@ -27,7 +27,8 @@ export default {
         getters: {
             appLoading: (state) => state.appLoading,
             currentEvent: (state) => state.currentEvent,
-            events: (state) => state.events
+            events: (state) => state.events.filter(ev => ev.visible),
+            bckCol: state => state.bckCol
         }
     },
     methods: {

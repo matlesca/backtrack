@@ -10,7 +10,7 @@
 
 <script type="text/javascript">
   import applogo from './applogo.vue'
-  import {toggleAppLoading} from '../vuex/actions'
+  import {toggleAppLoading} from '../vuex/ui_actions'
 
   export default {
     replace: true,

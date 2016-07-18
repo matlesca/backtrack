@@ -4,7 +4,7 @@ import VueResource from 'vue-resource'
 import app from './components/app.vue'
 import play from './components/play.vue'
 import landing from './components/landing.vue'
-import {isAuth} from './vuex/actions'
+import {isAuth} from './vuex/dz_actions'
 
 import './styles.css'
 

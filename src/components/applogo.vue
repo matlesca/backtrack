@@ -157,7 +157,7 @@
       },
       ready: function () {
           document.querySelector('.logo-wrapper').style.display = 'inline-block'
-          setTimeout(() => this.animeOpen(this.size, 2000), 300)
+          setTimeout(() => this.animeOpen(this.size, 2000), 500)
       },
       data () {
           return {

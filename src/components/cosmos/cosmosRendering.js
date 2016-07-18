@@ -65,7 +65,6 @@ export default function (elemQuery, bckCol, randKey) {
         var tab = []
         for (var ss = 0; ss < nSys; ss++) {
             tab.push(new StarSystem(ss, nSys, depth + 3000, Math.floor(nPart / nSys)))
-            // shader.lensFlareTab.forEach(lens => {pointsTab.push(lens)})
         }
         return tab
     }

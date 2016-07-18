@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 import moment from 'moment'
-import {clickEvent} from '../../vuex/actions'
+import {clickEvent} from '../../vuex/ui_actions'
 
 export default {
     replace: true,

@@ -6,8 +6,6 @@
 </template>
 
 <script type="text/javascript">
-import deezer from '../../deezer'
-
 export default {
     replace: true,
     props: ['toppad'],
@@ -17,7 +15,7 @@ export default {
         }
     },
     methods: {
-        playSong: function (song) {deezer.playSong(song)}
+        playSong: function (song) {console.log(song)}
     }
 }
 
