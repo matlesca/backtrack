@@ -11,13 +11,13 @@
 
 <script>
 import store from '../vuex/store'
-import {initApp} from '../vuex/dz_actions'
+import {initApp, initPlayer} from '../vuex/dz_actions'
 
 export default {
     replace: false,
     store,
     vuex: {
-        actions: {initApp}
+        actions: {initApp, initPlayer}
     },
     ready: function () {
         this.initApp()

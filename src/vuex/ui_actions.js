@@ -1,3 +1,4 @@
+/*global DZ*/
 import moment from 'moment'
 
 // APP STATE :
@@ -15,10 +16,13 @@ export function setMoving ({dispatch}, moving) {
 }
 
 export function clickEvent ({dispatch, state}, event) {
-    if (state.moving) {
-        console.log('Wait for animation to complete to choose another date..')
-    } else {
+    if (!state.moving) {
+        dispatch('SET_MOVING', true)
         dispatch('SET_CURRENTEVENT', event)
+        if (state.playing) {
+            dispatch('SET_PLAYING', false)
+            DZ.player.pause()
+        }
     }
 }
 
@@ -61,13 +65,13 @@ export function analyseSongEvents ({dispatch, state}, paramId) {
             if (state.events[ee].id === paramId || paramId === 'all' || paramId === undefined) {
                 nbEvAll += 1
                 var objInterval = getIntervalSongs(state, state.events[ee].date, 3)
-                if (objInterval.nb < 30 || objInterval.tab.length < 10) {
+                if (objInterval.nb < 30 || objInterval.tab.length < 15) {
                     objInterval = getIntervalSongs(state, state.events[ee].date, 6)
-                    if (objInterval.nb < 30 || objInterval.tab.length < 10) {
+                    if (objInterval.nb < 30 || objInterval.tab.length < 15) {
                         objInterval = getIntervalSongs(state, state.events[ee].date, 12)
                     }
                 }
-                if (objInterval.nb >= 30 && objInterval.tab.length >= 10) {
+                if (objInterval.nb >= 30 && objInterval.tab.length >= 15) {
                     var finalTab = []
                     var nbArtists = 0
                     for (var tt = 0; tt < objInterval.tab.length; tt++) {

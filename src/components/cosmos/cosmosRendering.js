@@ -48,7 +48,7 @@ export default function (elemQuery, bckCol, randKey) {
         }
         that.particleSystems = makeParticles(depth, nPart, 5)
         that.particleSystems.forEach(sys => that.scene.add(sys))
-        that.cloudSystems = makeClouds(depth, Math.round(nPart * 2.5), 4)
+        that.cloudSystems = makeClouds(depth, Math.round(nPart * 1.5), 4)
         that.cloudSystems.forEach(sys => that.scene.add(sys))
         update()
     }

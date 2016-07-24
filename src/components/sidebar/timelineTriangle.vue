@@ -10,7 +10,10 @@ export default {
     props: ['pos', 'stepheight'],
     computed: {
         styleObject: function () {
-            return {'transform': 'translateY(' + this.pos + 'px)', 'height': this.stepheight + 'px'}
+            return {
+                'transform': 'translateY(' + this.pos + 'px)',
+                'height': this.stepheight + 'px'
+            }
         }
     }
 }

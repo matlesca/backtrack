@@ -26,8 +26,10 @@ export default {
                 if (this.locale === 'fr') {
                     this.startTooltip.text = 'Pour commencer, choisis une date dans la barre latérale'
                     this.startTooltip.xpos = -130
+                    this.startTooltip.ypos = 200
                 } else {
                     this.startTooltip.text = 'Start by choosing a date in the sidebar'
+                    this.startTooltip.ypos = 200
                 }
                 this.cosmos.addLabels([this.startTooltip])
                 this.loaded = true

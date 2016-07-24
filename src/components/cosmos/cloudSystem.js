@@ -74,9 +74,9 @@ export default function (myScene, index, nSys, totalDepth, nPartSys) {
         for (var i = 0, i3 = 0; i < nPartSys; i++, i3 += 3) {
             var col = makeCloudCol()
             positions[i3 + 0] = Math.random() * 8000 - 4000
-            positions[i3 + 1] = -Math.random() * Math.random() * 800 - 800
+            positions[i3 + 1] = -Math.random() * Math.random() * 800 - 1100
             positions[i3 + 2] = Math.floor(i * totalDepth / nPartSys) * (1 + index / nSys)
-            sizes[i] = 1500 + Math.floor(Math.random() * 1000)
+            sizes[i] = 2500 + Math.floor(Math.random() * 1500)
             alpha[i] = 0.5 + Math.round(Math.random() * 40) / 100
             colors[i3 + 0] = col.r
             colors[i3 + 1] = col.g

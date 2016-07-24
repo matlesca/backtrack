@@ -27,16 +27,16 @@ export default {
     watch: {
         currentEvent: function (newVal) {
             if (newVal === this.event) {
-                if (!this.focus) {
-                    this.focus = true
-                }
+                this.focus = true
                 this.setEventLoading(true)
                 imagesLoaded('.img-' + this.index, () => {
                     setTimeout(() => {
                         this.msnry = new Masonry('#event-grid-' + this.index, {itemSelector: '.event-panel', columnWidth: 10})
                         this.setEventLoading(false)
-                    }, 100)
+                    }, 200)
                 })
+            } else {
+                setTimeout(() => this.focus = false, 200)
             }
         },
         cosmos: function () {

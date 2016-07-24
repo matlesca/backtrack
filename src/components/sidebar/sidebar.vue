@@ -1,11 +1,10 @@
 <template>
     <div class="sidebar-wrapper" v-bind:class="{'is-loading': appLoading}">
         <player :toppad="param.topPadding"></player>
-        <div class="timeline-main" v-bind:style="{height: renderHeight + 'px'}">
-            <timeline-tick v-for="tick in ticks" :tick="tick"></timeline-tick>
+        <div class="timeline-main" v-bind:style="{height: (renderHeight + 'px')}">
+            <timeline-tick v-for="tick in ticks" :tick="tick" v-if="tick.important"></timeline-tick>
             <timeline-triangle :pos="trianglepos" :stepheight="param.stdStepHeight"></timeline-triangle>
             <timeline-step v-for="event in events" :event="event" :pos="evPos[$index]" :stepheight="param.stdStepHeight"></timeline-step>
-
         </div>
     </div>
     <div class="sidebar-gradient" v-bind:class="{'is-loading': appLoading}"></div>
@@ -92,11 +91,16 @@ export default {
                 ticks = []
                 ticks.push({'date': firstDate.format('YYYY-MM-DD'), 'pos': this.param.topPadding})
                 for (ii = 1; ii < nbTicks; ii++) {
+                    var myDate = firstDate.clone().add(ii, 'days')
+                    var important = false
+                    if (myDate.date() === 1) {
+                        important = true
+                    }
                     if (this.getEvent(firstDate.clone().add(ii - 1, 'days'))) {
                         // If there is an event step at the previous tick
-                        ticks.push({'date': firstDate.clone().add(ii, 'days').format('YYYY-MM-DD'), 'pos': ticks[ii - 1].pos + this.param.stdStepHeight})
+                        ticks.push({'date': myDate.format('YYYY-MM-DD'), 'pos': ticks[ii - 1].pos + this.param.stdStepHeight, 'important': important})
                     } else {
-                        ticks.push({'date': firstDate.clone().add(ii, 'days').format('YYYY-MM-DD'), 'pos': ticks[ii - 1].pos + tickSpacing})
+                        ticks.push({'date': myDate.format('YYYY-MM-DD'), 'pos': ticks[ii - 1].pos + tickSpacing, 'important': important})
                     }
                 }
                 resolve({'ticks': ticks, 'totalHeight': totalHeight + this.param.topPadding})
@@ -113,7 +117,7 @@ export default {
     },
     computed: {
         trianglepos: function () {
-            if (this.currentEvent) {
+            if (this.currentEvent.date) {
                 return this.evPos[this.events.indexOf(this.currentEvent)]
             } else {
                 return 0
@@ -137,7 +141,7 @@ export default {
     },
     data () {
         return {
-            param: {stdTickSpacing: 6, stdStepHeight: 25, topPadding: 60},
+            param: {stdTickSpacing: 3, stdStepHeight: 25, topPadding: 80},
             renderHeight: 0,
             evPos: [],
             ticks: []

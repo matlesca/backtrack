@@ -13,10 +13,24 @@ export function initApp ({dispatch}) {
         dispatch('SET_BCKCOL', 'rgb(' + r + ',' + g + ',' + b + ')')
         dispatch('SET_RANDKEY', Math.random())
         dispatch('SET_INITAPP', true)
+        // Check if already connected :
+        DZ.getLoginStatus(function (response) {
+            if (response.authResponse) {
+                dispatch('SET_AUTH', response)
+                if (response.status === 'connected') {
+                    dispatch('SET_ALLOWFULLSONGS', true)
+                } else {
+                    dispatch('SET_ALLOWFULLSONGS', false)
+                }
+            } else {
+                dispatch('SET_AUTH', {})
+                dispatch('SET_ALLOWFULLSONGS', false)
+            }
+        })
         resolve()
     })
 }
-export function initPlayer ({dispatch}) {
+export function initPlayer ({dispatch, state}) {
     return new Promise(function (resolve, reject) {
         DZ.init({
             appId: '172545',
@@ -24,6 +38,9 @@ export function initPlayer ({dispatch}) {
             player: {
                 onload: () => {
                     dispatch('SET_INITPLAYER', true)
+                    DZ.Event.subscribe('current_track', (track) => {
+                        dispatch('SET_CURRENTSONGID', track.track.id)
+                    })
                     resolve()
                 }
             }
@@ -36,12 +53,18 @@ export function login ({dispatch}) {
     return new Promise(function (resolve, reject) {
         DZ.login(function (response) {
             if (response.authResponse) {
+                if (response.status === 'connected') {
+                    dispatch('SET_ALLOWFULLSONGS', true)
+                } else {
+                    dispatch('SET_ALLOWFULLSONGS', false)
+                }
                 DZ.api('/user/me', function (response) {
                     dispatch('SET_AUTH', response)
                     resolve(response)
                 })
             } else {
                 dispatch('SET_AUTH', {})
+                dispatch('SET_ALLOWFULLSONGS', false)
                 reject({type: 'auth', message: 'Couldn\'t connect, please try to log-in again'})
             }
         }, {perms: 'basic_access, email, listening_history'})
@@ -79,7 +102,17 @@ function getAPISongs (index, limit, strict) {
                             resolve([])
                         }
                     } else {
-                        resolve(response.data)
+                        var retTab = []
+                        response.data.forEach(song => {
+                            retTab.push({
+                                id: song.id,
+                                title: song.title,
+                                timestamp: song.timestamp,
+                                preview: song.preview,
+                                artist: {id: song.artist.id, name: song.artist.name}
+                            })
+                        })
+                        resolve(retTab)
                     }
                 } else if (response.error) {
                     reject(response.error)

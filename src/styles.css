@@ -29,3 +29,6 @@ html,body {
     padding: 0px;
     overflow-x: hidden;
 }
+
+button:focus {outline:0;}
+input[type='range']:focus {outline:0;}

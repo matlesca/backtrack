@@ -64,7 +64,7 @@ export default {
     ready: function () {
         var depth = this.getZPos(this.evdates.lastDate)
         this.myCosmos = new Cosmos('.cosmos-main', this.bckCol, this.randKey)
-        this.myCosmos.init(depth, true, Math.floor(depth / 60))
+        this.myCosmos.init(depth, false, Math.floor(depth / 60))
     },
     data () {
         return {

@@ -11,6 +11,9 @@ const state = {
     isInitPlayer: false,
     bckCol: 'rgb(70, 40, 60)',
     dateSongs: {},
+    allowFullSongs: false,
+    playing: false,
+    currentSongID: 0,
     // Deezer history
     songs: [],
     histoBound: 0,
@@ -36,6 +39,12 @@ const mutations = {
     },
     SET_INITPLAYER (state, init) {
         state.isInitPlayer = init
+    },
+    SET_ALLOWFULLSONGS (state, allow) {
+        state.allowFullSongs = allow
+    },
+    SET_CURRENTSONGID (state, songId) {
+        state.currentSongID = songId
     },
     SET_AUTH (state, auth) {
         state.auth = auth
@@ -80,6 +89,9 @@ const mutations = {
     },
     SET_MOVING (state, moving) {
         state.moving = moving
+    },
+    SET_PLAYING (state, play) {
+        state.playing = play
     },
     SET_APPLOADING (state, loading) {
         state.appLoading = loading

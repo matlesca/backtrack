@@ -41,7 +41,7 @@
             </button>
         </div>
         <div class="header-bt-wrapper bt-error" v-show="currentHeader === 'allDone'" transition="opac">
-            <button type="button" class="bt-brown" name="button" v-on:click="goPlay()">
+            <button type="button" class="bt-violet" name="button" v-on:click="goPlay()">
                 Go to your timeline
             </button>
         </div>

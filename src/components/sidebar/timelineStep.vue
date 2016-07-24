@@ -47,7 +47,7 @@ export default {
 .timeline-step-wrapper.selected .timeline-date {text-decoration: none; cursor: default;}
 
 .timeline-date {
-    opacity:0; transition: opacity 0.1s;
+    opacity:0;
     color: #364559; font-size: 15pt;
     font-family: 'Roboto Condensed', 'Helvetica', sans-serif;
     font-style: italic;
