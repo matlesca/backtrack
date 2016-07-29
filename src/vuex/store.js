@@ -10,12 +10,12 @@ const state = {
     isInitApp: false,
     isInitPlayer: false,
     bckCol: 'rgb(70, 40, 60)',
-    dateSongs: {},
     allowFullSongs: false,
     playing: false,
     currentSongID: 0,
     // Deezer history
     songs: [],
+    dailySongs: {},
     histoBound: 0,
     lastHistoBound: 0,
     currentSongIndex: 0,
@@ -24,6 +24,7 @@ const state = {
     delayRequests: 0,
     // Events
     events: loadEvents,
+    dateEventSongs: {},
     currentEvent: {},
     moving: false,
     appLoading: false,
@@ -61,6 +62,18 @@ const mutations = {
     ADD_SONG (state, song) {
         state.songs.push(song)
     },
+    ADD_DAILYSONG (state, song) {
+        if (state.dailySongs[song.date]) {
+            if (state.dailySongs[song.date][song.id]) {
+                state.dailySongs[song.date][song.id] += 1
+            } else {
+                state.dailySongs[song.date][song.id] = 1
+            }
+        } else {
+            state.dailySongs[song.date] = {}
+            state.dailySongs[song.date][song.id] = 1
+        }
+    },
     INC_SONGINDEX (state, val) {
         state.currentSongIndex += val
     },
@@ -74,8 +87,31 @@ const mutations = {
         state.histoBound = 0
         state.lastHistoBound = 0
     },
-    SET_DATESONGS (state, obj) {
-        state.dateSongs[obj.date] = obj.tab
+    ADD_DATEEVENTSONG (state, obj) {
+        if (state.dateEventSongs[obj.date]) {
+            if (state.dateEventSongs[obj.date].nb < 10) {
+                var knowArtist = false
+                state.dateEventSongs[obj.date].artists.forEach(artist => {
+                    if (artist.id === obj.artist.id) {
+                        knowArtist = true
+                        var knowSong = false
+                        artist.songs.forEach(song => {
+                            if (song.id === obj.id) {knowSong = true}
+                        })
+                        if (!knowSong && artist.songs.length < 4) {
+                            artist.songs.push({id: obj.id, title: obj.title, preview: obj.preview})
+                            state.dateEventSongs[obj.date].nb += 1
+                        }
+                    }
+                })
+                if (!knowArtist && state.dateEventSongs[obj.date].artists.length < 3) {
+                    state.dateEventSongs[obj.date].artists.push({id: obj.artist.id, name: obj.artist.name, songs: [{id: obj.id, title: obj.title, preview: obj.preview}]})
+                    state.dateEventSongs[obj.date].nb += 1
+                }
+            }
+        } else {
+            state.dateEventSongs[obj.date] = {nb: 1, artists: [{id: obj.artist.id, name: obj.artist.name, songs: [{id: obj.id, title: obj.title, preview: obj.preview}]}]}
+        }
     },
     SET_EVENTVISIBLE (state, obj) {
         state.events.forEach(ev => {
@@ -85,7 +121,7 @@ const mutations = {
         })
     },
     INC_DELAYREQUESTS (state) {
-        state.delayRequests += 100
+        state.delayRequests += 40
     },
     SET_MOVING (state, moving) {
         state.moving = moving

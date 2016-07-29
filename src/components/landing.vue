@@ -11,7 +11,7 @@
             <span v-show="currentHeader === 'helloX'" transition="head">Hello {{loginName}} !</span>
             <span v-show="currentHeader === 'connectError'" transition="head">{{connectErrorMessage}}</span>
             <span v-show="currentHeader === 'songLoading'" transition="head">Fetching your music listening history..</span>
-            <span v-show="currentHeader === 'songError'" transition="head">There was an error, {{currentSongIndex}} were loaded</span>
+            <span v-show="currentHeader === 'songError'" transition="head">Server error, Backtrack loaded only {{currentSongIndex}}/{{histoBound - 1}} songs</span>
             <span v-show="currentHeader === 'analyseSongs'" transition="head">Analysing songs..</span>
             <span v-show="currentHeader === 'playerLoading'" transition="head">Loading the music player..</span>
             <span v-show="currentHeader === 'allDone'" transition="head">All done !</span>
@@ -136,7 +136,7 @@ export default {
             this.currentHeader = 'analyseSongs'
             this.setAppLoading(true)
             setTimeout(() => {
-                this.analyseSongEvents('all').then(() => this.loadPlayer()).catch(() => this.loadPlayer())
+                this.analyseSongEvents('all').then(() => this.loadPlayer()).catch(error => console.log(error.message))
             }, 400)
         },
         loadPlayer: function () {
