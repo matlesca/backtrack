@@ -12,9 +12,14 @@ import moment from 'moment'
 export default {
     replace: true,
     props: ['tick'],
+    vuex: {
+        getters: {
+            locale: state => state.locale
+        }
+    },
     created: function () {
         // Setup the style objects depending on the tick date..
-        moment.locale(window.navigator.userLanguage || window.navigator.language)
+        moment.locale(this.locale)
         var momDate = moment(this.tick.date, 'YYYY-MM-DD')
         this.styleTick = {top: this.tick.pos + 'px'}
         if (momDate.date() === 1 && momDate.month() === 0) {

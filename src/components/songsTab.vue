@@ -1,9 +1,9 @@
 <template>
     <div class="songs-tab-wrapper">
-        <div class="artist-bloc" v-for="tab in displayTab.artists" v-bind:class="{'current': artistPlaying[$index]}" v-show="visibleTab === true">
+        <div class="artist-bloc" v-for="tab in currentSongsData.artists | orderBy 'nb' -1" v-bind:class="{'current': artistPlaying[$index]}" v-show="visibleTab === true">
             <div class="artist-songs-bloc">
                 <em class="artist-name">{{tab.name}}</em>
-                <span v-on:click="setPlayList(song.id)" class="song-line" v-bind:class="{'current': songPlaying[song.id], 'playing': playing}" v-for="song in tab.songs">
+                <span v-on:click="setPlayList(song.id)" class="song-line" v-bind:class="{'current': songPlaying[song.id], 'playing': playing}" v-for="song in tab.songs | orderBy 'nb' -1">
                     <svg viewBox="0 0 20 20" >
                         <rect id="pause-icon" width="7" height="20"/>
                         <rect id="pause-icon" x="13" width="7" height="20"/>
@@ -32,7 +32,7 @@ export default {
     vuex: {
         getters: {
             currentEvent: state => state.currentEvent,
-            dateEventSongs: state => state.dateEventSongs,
+            currentSongsData: state => state.currentSongsData,
             playing: state => state.playing,
             moving: state => state.moving,
             currentSongID: state => state.currentSongID
@@ -48,9 +48,9 @@ export default {
     },
     computed: {
         visibleTab: function () {
-            if (!this.moving && this.dateEventSongs[this.currentEvent.date]) {
+            if (!this.moving) {
                 if (!this.playing && !this.dirtyMove) {
-                    this.setPlayList(this.dateEventSongs[this.currentEvent.date].artists[0].songs[0].id)
+                    this.setPlayList(this.currentSongsData.artists[0].songs[0].id)
                     this.dirtyMove = true
                 }
                 return true
@@ -60,7 +60,7 @@ export default {
         },
         artistPlaying: function () {
             var retTab = []
-            this.displayTab.artists.forEach(tab => {
+            this.currentSongsData.artists.forEach(tab => {
                 var artistBool = false
                 tab.songs.forEach(song => {
                     if (String(this.currentSongID) === String(song.id)) {
@@ -75,9 +75,6 @@ export default {
             var retObj = {}
             retObj[this.currentSongID] = true
             return retObj
-        },
-        displayTab: function () {
-            return this.dateEventSongs[this.currentEvent.date]
         }
     },
     methods: {
@@ -87,7 +84,7 @@ export default {
             } else {
                 var tabPlay = []
                 var startIndex
-                this.displayTab.artists.forEach(tab => {
+                this.currentSongsData.artists.forEach(tab => {
                     tab.songs.forEach(song => {
                         if (song.id === startSongId) {
                             startIndex = tabPlay.length

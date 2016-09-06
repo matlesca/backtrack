@@ -10,7 +10,7 @@ export default function (elemQuery, bckCol, randKey) {
     this.bckColor = bckCol
     this.randKey = randKey
     this.labels = []
-    this.grids = []
+    this.grid = {position: {x: 0, y: 0, z: 0}}
     this.isAnim = false
     this.moveTween = false
     // Setup scene, fog, camera & renderer :
@@ -160,24 +160,16 @@ export default function (elemQuery, bckCol, randKey) {
     this.addGrid = function (grid) {
         var gridObject, div
         return new Promise(function (resolve) {
-            div = document.querySelector('#' + grid.elemId)
+            div = document.querySelector('.mygrid')
             gridObject = new THREE.CSS3DObject(div)
             gridObject.position.x = 0
             gridObject.position.y = 0
             gridObject.position.z = grid.zpos
             gridObject.rotation.y = Math.PI
             that.scene2.add(gridObject)
-            that.grids.push(gridObject)
+            that.grid = gridObject
             resolve()
         })
-    }
-    function getGrid (zpos) {
-        for (var ii = 0; ii < that.grids.length; ii++) {
-            if (that.grids[ii].position.z === zpos) {
-                return that.grids[ii]
-            }
-        }
-        return null
     }
     this.addLabels = function (labels) {
         var ii, labelObj, div
@@ -207,37 +199,30 @@ export default function (elemQuery, bckCol, randKey) {
         }
     }
     function hideLabels () {
+        // show event grid and hide labels :
+        that.grid.element.classList.add('visible')
         for (var ii = 0; ii < that.labels.length; ii++) {
             if (that.labels[ii].element.style.opacity > 0) {
                 new TWEEN.Tween(that.labels[ii].element.style, {override: true}).to({opacity: 0}, 300).easing(TWEEN.Easing.Cubic.InOut).start()
             }
         }
     }
-    function hideGrids () {
-        for (var ii = 0; ii < that.grids.length; ii++) {
-            if (that.grids[ii].element.style.opacity > 0) {
-                new TWEEN.Tween(that.grids[ii].element.style, {override: true}).to({opacity: 0}, 300).easing(TWEEN.Easing.Cubic.InOut).start()
-            }
-        }
-    }
     this.moveTo = function (zpos) {
         return new Promise((resolve, reject) => {
-            if (getGrid(zpos)) {
-                var duration = 1000 + Math.floor(Math.abs(that.camera.position.z - zpos) / 10)
-                hideGrids()
-                TWEEN.remove(that.moveTween)
-                that.moveTween = new TWEEN.Tween(that.camera.position, {override: true})
-                    .to({z: zpos - 520}, duration).easing(TWEEN.Easing.Cubic.InOut)
-                    .onUpdate(function () {
-                        updateLabelsOpacity()
-                    }).onComplete(function () {
-                        resolve()
-                    }).start()
-                window.setTimeout(hideLabels, duration - 290)
-                new TWEEN.Tween(getGrid(zpos).element.style, {override: true}).delay(duration - 1000).to({opacity: 1}, 1000).easing(TWEEN.Easing.Cubic.InOut).start()
-            } else {
-                reject({message: 'No grid was added at this position yet'})
-            }
+            var duration = 1000 + Math.floor(Math.abs(that.camera.position.z - zpos) / 10)
+            that.grid.element.classList.remove('visible')
+            TWEEN.remove(that.moveTween)
+            that.moveTween = new TWEEN.Tween(that.camera.position, {override: true})
+                .to({z: zpos - 520}, duration).easing(TWEEN.Easing.Cubic.InOut)
+                .onUpdate(function () {
+                    updateLabelsOpacity()
+                }).onComplete(function () {
+                    resolve()
+                }).start()
+            window.setTimeout(hideLabels, duration - 290)
         })
+    }
+    this.moveGrid = function (zpos) {
+        that.grid.position.z = zpos
     }
 }

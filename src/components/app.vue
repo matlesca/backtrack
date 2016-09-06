@@ -5,17 +5,21 @@
 
         <router-view></router-view>
 
+        <modal></modal>
+
     </div>
 
 </template>
 
 <script>
 import store from '../vuex/store'
+import modal from './modal/modal.vue'
 import {initApp, initPlayer} from '../vuex/dz_actions'
 
 export default {
     replace: false,
     store,
+    components: {modal},
     vuex: {
         actions: {initApp, initPlayer}
     },

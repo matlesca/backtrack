@@ -11,7 +11,7 @@
             <span v-show="currentHeader === 'helloX'" transition="head">Hello {{loginName}} !</span>
             <span v-show="currentHeader === 'connectError'" transition="head">{{connectErrorMessage}}</span>
             <span v-show="currentHeader === 'songLoading'" transition="head">Fetching your music listening history..</span>
-            <span v-show="currentHeader === 'songError'" transition="head">Server error, Backtrack loaded only {{currentSongIndex}}/{{histoBound - 1}} songs</span>
+            <span v-show="currentHeader === 'songError'" transition="head">Server error, Backtrack loaded only {{loadingSongsIndex}}/{{histoBound - 1}} songs</span>
             <span v-show="currentHeader === 'analyseSongs'" transition="head">Analysing songs..</span>
             <span v-show="currentHeader === 'playerLoading'" transition="head">Loading the music player..</span>
             <span v-show="currentHeader === 'allDone'" transition="head">All done !</span>
@@ -20,7 +20,7 @@
             <div class="loading-bar-back" v-bind:style="{backgroundColor: bckCol}">
                 <div class="loading-bar-front" v-bind:style="{width: loadWidth + '%'}"></div>
             </div>
-            <div class="loading-bar-text">{{currentSongIndex}} / {{histoBound - 1}}</div>
+            <div class="loading-bar-text">{{loadingSongsIndex}} / {{histoBound - 1}}</div>
         </div>
         <div class="header-bt-wrapper bt-start" v-show="currentHeader === 'welcome'" transition="opac">
             <button type="button" class="bt-violet" name="button" v-on:click="startConnect()">
@@ -36,7 +36,7 @@
             <button type="button" class="bt-violet" name="button" v-on:click="tryAgain()">
                 Try again
             </button>
-            <button v-show="currentHeader === 'songError'" type="button" class="bt-brown" name="button" v-on:click="analyseSongs()">
+            <button v-show="currentHeader === 'songError'" type="button" class="bt-brown" name="button" v-on:click="loadPlayer()">
                 Continue
             </button>
         </div>
@@ -46,7 +46,7 @@
             </button>
         </div>
         <div class="header-about-wrap">
-            <a href="http://google.com">About</a>
+            <a v-on:click="setCurrentModal('addevNews')">About</a>
         </div>
     </div>
 </template>
@@ -54,26 +54,27 @@
 <script>
 import applogo from './applogo.vue'
 import {logout, login, initApp, initPlayer, getHistoBound, getAllSongs, resetSongs} from '../vuex/dz_actions'
-import {setAppLoading, analyseSongEvents} from '../vuex/ui_actions'
+import {setAppLoading, setCurrentModal} from '../vuex/ui_actions'
+import {analyseSongEvents} from '../vuex/algo_actions'
 import Cosmos from './cosmos/cosmosRendering.js'
 
 export default {
     components: {'app-logo': applogo},
     vuex: {
-        actions: {setAppLoading, logout, login, initApp, initPlayer, getHistoBound, getAllSongs, resetSongs, analyseSongEvents},
+        actions: {setAppLoading, logout, login, initApp, initPlayer, getHistoBound, getAllSongs, resetSongs, analyseSongEvents, setCurrentModal},
         getters: {
             // Init app :
             auth: state => state.auth,
             isInitApp: state => state.isInitApp,
             isInitPlayer: state => state.isInitPlayer,
             // Songs loading :
-            currentSongIndex: state => state.currentSongIndex,
+            loadingSongsIndex: state => state.loadingSongsIndex,
             histoBound: state => state.histoBound,
             songLoadProg: state => {
                 if (state.histoBound === 0) {
                     return 0
                 } else {
-                    return Math.round(100 * state.currentSongIndex / state.histoBound)
+                    return Math.round(100 * state.loadingSongsIndex / state.histoBound)
                 }
             },
             bckCol: state => state.bckCol,
@@ -82,7 +83,7 @@ export default {
     },
     computed: {
         loadWidth: function () {
-            return Math.min(100, Math.round(100 * this.currentSongIndex / Math.max((this.histoBound - 1), 1)))
+            return Math.min(100, Math.round(100 * this.loadingSongsIndex / Math.max((this.histoBound - 1), 1)))
         }
     },
     methods: {
@@ -125,7 +126,8 @@ export default {
             this.currentHeader = 'songLoading'
             this.setAppLoading(true)
             this.getAllSongs().then(() => {
-                this.analyseSongs()
+                // this.analyseSongs()
+                this.loadPlayer()
             }).catch(error => {
                 console.log(error)
                 this.setAppLoading(false)
@@ -156,7 +158,7 @@ export default {
         setTimeout(this.initCosmos, 1500)
         setTimeout(() => this.currentHeader = 'welcome', 800)
     },
-    data () {
+    data: () => {
         return {
             myCosmos: {},
             loginName: '',
@@ -238,6 +240,7 @@ export default {
     }
     .header-about-wrap a {
         font-family: 'Raleway', 'Helvetica', sans-serif;
+        cursor: pointer; text-decoration: underline;
         color: #FFFFE9; font-style: italic;
     }
 

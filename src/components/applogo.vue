@@ -187,9 +187,4 @@
 
 .logo-wrapper.big .small-motion-path, .logo-wrapper.small .big-motion-path, .logo-wrapper.small .big-loading-path {display: none;}
 
-.backtrack-logo.is-loading .static-logo {opacity:0;}
-.backtrack-logo.is-loading .loading-logo-spin {display: block; opacity: 1; animation:spin 0.6s linear infinite 0.1s;}
-
-@keyframes spin {100% {transform:rotate(360deg);}}
-
 </style>

@@ -48,6 +48,12 @@ export function initPlayer ({dispatch, state}) {
         })
     })
 }
+export function resetSongs ({dispatch}) {
+    return new Promise(function (resolve, reject) {
+        dispatch('RESET_LOADINGPROCESS', true)
+        resolve()
+    })
+}
 
 // DEEZER AUTH :
 export function login ({dispatch}) {
@@ -71,11 +77,16 @@ export function login ({dispatch}) {
         }, {perms: 'basic_access, email, listening_history'})
     })
 }
-export function logout ({dispatch}, router) {
-    DZ.logout(() => {
-        console.log('User logged-out')
-        router.go('/')
-        dispatch('SET_AUTH', {})
+export function logout ({dispatch}) {
+    return new Promise(function (resolve, reject) {
+        DZ.logout(() => {
+            dispatch('SET_AUTH', {})
+            if (DZ.player) {
+                DZ.player.pause()
+                dispatch('SET_PLAYING', false)
+            }
+            resolve()
+        })
     })
 }
 export function isAuth () {
@@ -87,6 +98,25 @@ export function isAuth () {
                 reject(false)
             }
         })
+    })
+}
+
+// APP API FETCHING DATA
+export function getHistoBound ({dispatch, state}) {
+    return new Promise(function (resolve, reject) {
+        if (state.histoBound === 0) {
+            dispatch('SET_HISTOBOUND', 10000)
+        }
+        loopBounds(dispatch, state, resolve, reject)
+    })
+}
+export function getAllSongs ({dispatch, state}) {
+    return new Promise(function (resolve, reject) {
+        if (state.histoBound === 0) {
+            reject({message: 'please setup the histo bound before running getAllSongs'})
+        } else {
+            loopDailySongsHisto(dispatch, state, resolve, reject)
+        }
     })
 }
 
@@ -190,60 +220,13 @@ function loopBounds (dispatch, state, resolve, reject) {
         }
     })
 }
-// function loopSongsHisto (numbProm, dispatch, state, resolve, reject) {
-//     // var proms = []
-//     var promsBatches = []
-//     var numBatches = Math.ceil(state.histoBound / (numbProm * 50))
-//     for (var bb = 0; bb < numBatches; bb++) {
-//         promsBatches.push([])
-//         for (var pp = 0; pp < numbProm; pp++) {
-//             promsBatches[bb].push(getAPISongsHisto(50 * (bb * numbProm + pp), 50, false))
-//         }
-//     }
-//     var allProm = promsBatches.reduce((lastBatch, currentBatch) => {
-//         return new Promise((resBatch, rejBatch) => {
-//             lastBatch.then(() => {
-//                 setTimeout(() => {
-//                     Promise.all(currentBatch).then((values) => {
-//                         dispatch('RESET_TIMESFAILED')
-//                         values.forEach((val) => {
-//                             val.forEach((song) => {
-//                                 dispatch('ADD_SONG', {
-//                                     id: song.id, title: song.title,
-//                                     timestamp: song.timestamp,
-//                                     preview: song.preview,
-//                                     artist: {id: song.artist.id, name: song.artist.name}
-//                                 })
-//                             })
-//                             dispatch('INC_SONGINDEX', val.length)
-//                         })
-//                         resBatch()
-//                     }).catch(error => {
-//                         rejBatch(error)
-//                     })
-//                 }, state.delayRequests)
-//             }).catch((error) => {
-//                 rejBatch(error)
-//             })
-//         })
-//     }, Promise.resolve())
-//
-//     allProm.then(() => {
-//         dispatch('INC_SONGINDEX', state.currentSongIndex - state.histoBound - 1)
-//         console.log(JSON.stringify(state.songs))
-//         resolve()
-//     }).catch(error => {
-//         dispatch('INC_DELAYREQUESTS')
-//         reject(error)
-//     })
-// }
 
 function loopDailySongsHisto (dispatch, state, resolve, reject, indexesTab) {
     var proms = []
     var missedIndexes = []
     if (indexesTab) {
         indexesTab.forEach(ind => {
-            proms.push(getAPISongsHisto(50 * ind, 50, false, state.delayRequests))
+            proms.push(getAPISongsHisto(ind, 50, false, state.delayRequests))
         })
     } else {
         for (var pp = 0; pp < Math.ceil(state.histoBound / 50); pp++) {
@@ -255,13 +238,17 @@ function loopDailySongsHisto (dispatch, state, resolve, reject, indexesTab) {
             lastProm.then(() => {
                 currentProm.then(result => {
                     dispatch('RESET_TIMESFAILED')
-                    dispatch('INC_SONGINDEX', result.data.length)
+                    dispatch('INC_LOADINGSONGSINDEX', result.data.length)
                     result.data.forEach(song => {
                         dispatch('ADD_DAILYSONG', {
                             date: moment.unix(song.timestamp).format('YYYY-MM-DD'),
                             id: song.id
                         })
                     })
+                    if (result.index === 0) {
+                        dispatch('SET_DATEBOUNDS', {last: moment.unix(result.data[0].timestamp).format('YYYY-MM-DD')})
+                    }
+                    dispatch('SET_DATEBOUNDS', {first: moment.unix(result.data[result.data.length - 1].timestamp).format('YYYY-MM-DD')})
                     resProm()
                 }).catch(error => {
                     // If quota exceeded => remember missing index to try it again later, and continue loading histo
@@ -282,44 +269,15 @@ function loopDailySongsHisto (dispatch, state, resolve, reject, indexesTab) {
             } else {
                 // If some indexes are missing try again a bit later
                 dispatch('INC_DELAYREQUESTS')
-                console.log('Failed to load', missedIndexes.length, 'batches.. trying again in a bit.')
                 setTimeout(() => {
                     loopDailySongsHisto(dispatch, state, resolve, reject, missedIndexes)
                 }, state.delayRequests)
             }
         } else {
-            dispatch('INC_SONGINDEX', state.currentSongIndex - state.histoBound - 1)
+            dispatch('INC_LOADINGSONGSINDEX', state.loadingSongsIndex - state.histoBound - 1)
             resolve()
         }
     }).catch(error => {
         reject(error)
-    })
-}
-
-// APP API FETCHING DATA
-export function getHistoBound ({dispatch, state}) {
-    return new Promise(function (resolve, reject) {
-        if (state.histoBound === 0) {
-            dispatch('SET_HISTOBOUND', 10000)
-        }
-        loopBounds(dispatch, state, resolve, reject)
-    })
-}
-export function getAllSongs ({dispatch, state}) {
-    return new Promise(function (resolve, reject) {
-        if (state.histoBound === 0) {
-            reject({message: 'please setup the histo bound before running getAllSongs'})
-        } else {
-            // Define the number of requests to be sent at once to the server
-            // var minNumbProm = Math.min(state.parallelRequests, Math.max(Math.floor(state.histoBound / 50), 1))
-            // loopSongsHisto(minNumbProm, dispatch, state, resolve, reject)
-            loopDailySongsHisto(dispatch, state, resolve, reject)
-        }
-    })
-}
-export function resetSongs ({dispatch, state}) {
-    return new Promise(function (resolve, reject) {
-        dispatch('RESET_SONGS')
-        resolve()
     })
 }

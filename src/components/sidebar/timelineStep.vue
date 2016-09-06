@@ -13,7 +13,8 @@ export default {
     props: ['event', 'pos', 'stepheight'],
     vuex: {
         getters: {
-            currentEvent: (state) => state.currentEvent
+            currentEvent: (state) => state.currentEvent,
+            locale: state => state.locale
         },
         actions: {clickEvent}
     },
@@ -26,7 +27,7 @@ export default {
         }
     },
     created: function () {
-        moment.locale(window.navigator.userLanguage || window.navigator.language)
+        moment.locale(this.locale)
     }
 }
 

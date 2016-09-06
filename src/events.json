@@ -4,7 +4,7 @@
         "title": {"en": "Terrorist attacks in Paris", "fr": "Attaques terroristes à Paris"},
         "visible": true,
         "type": "article",
-        "category": "society",
+        "category": {"en": "society", "fr": "société"},
         "date": "2015-11-13",
         "panels": [
             {"type": "text", "text": {
@@ -12,8 +12,7 @@
                 "fr": "A 21h des hommes armés ont pris d'assaut le Bataclan, faisant plus de 100 morts."
             }},
             {"type": "image", "src": "http://i.f1g.fr/media/figaro/805x453_crop/2015/11/20/XVM2fab5dca-8fbd-11e5-8af4-dde313013ee9.jpg"},
-            {"type": "image", "src": "http://france3-regions.francetvinfo.fr/paris-ile-de-france/sites/regions_france3/files/styles/top_big/public/assets/images/2016/01/02/000_arp4068395_1.jpg?itok=y5dw7PCA"},
-            {"type": "image", "src": "http://www.metronews.fr/_internal/gxml!0/r0dc21o2f3vste5s7ezej9x3a10rp3w$m2hv93zgdi18tbpngphif3i69tdmkbw/sipa_ap21821820_000001.jpeg"}
+            {"type": "image", "src": "http://france3-regions.francetvinfo.fr/paris-ile-de-france/sites/regions_france3/files/styles/top_big/public/assets/images/2016/01/02/000_arp4068395_1.jpg?itok=y5dw7PCA"}
         ]
     },
     {
@@ -22,7 +21,7 @@
             "fr": "Emmanuel Macron présente son projet de loi pour l'économie."},
         "visible": true,
         "type": "article",
-        "category": "politics",
+        "category": {"en": "politics", "fr": "politique"},
         "date": "2015-10-26",
         "panels": [
             {"type": "text", "text": {
@@ -39,8 +38,8 @@
         "title": {"en": "Smashing Pumpkins reunited with James Iha", "fr": "James Iha réintègre les Smashing Pumpkins"},
         "visible": true,
         "type": "article",
-        "category": "culture",
-        "date": "2016-06-10",
+        "category": {"en": "culture", "fr": "culture"},
+        "date": "2016-08-18",
         "panels": [
             {"type": "text", "text": {
                 "en":"The famous rock band offically announced its reunion this saturday. A come-back concert tour is expected this summer.",
@@ -48,6 +47,23 @@
             }},
             {"type": "image", "src": "http://kilscene.com/wp-content/uploads/2014/02/Smashing_Group.jpg"},
             {"type": "image", "src": "https://spfreaks.files.wordpress.com/2013/07/ji01.jpg"}
+        ]
+    },
+    {
+        "id": "federer22012016",
+        "title": {"en": "Federer reached the threshold of 300 Grand Slam success", "fr": "Federer atteint la barre des 300 succès en Grand Chelem"},
+        "visible": true,
+        "type": "article",
+        "category": {"en": "sport", "fr": "sport"},
+        "date": "2015-01-05",
+        "panels": [
+            {"type": "text", "text": {
+                "en":"Roger Federer won its 300th victory in a Grand Slam tournament. He dominated the Bulgarian Grigor Dimitrov, and managed to qualify for the 8th finals of the Australian Open, where he will face Belgium's David Goffin.",
+                "fr": "Roger Federer a atteint la barre des 300 victoires en Grand Chelem! Le Bâlois, qui a dominé le Bulgare Grigor Dimitrov, s'est du même coup qualifié pour les 8es de finale de l'Open d'Australie où il affrontera le Belge David Goffin."
+            }},
+            {"type": "image", "src": "https://www.rts.ch/2016/01/22/09/33/7434683.image?w=960&h=540"},
+            {"type": "image", "src": "http://www.tennislegend.fr/wp-content/uploads/Verdasco-Nadal-Open-Australie-2016-Highlights-Best-points.jpg"},
+            {"type": "image", "src": "http://travelinnate.com/wp-content/uploads/2014/04/Sydney-Opera-House-11.jpg"}
         ]
     }
 ]

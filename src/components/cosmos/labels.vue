@@ -1,9 +1,11 @@
 <template>
-    <div class="month-label" v-for="label in monthLabels" v-bind:id="label.elemId">
-        {{label.text}}
-    </div>
-    <div v-bind:id="startTooltip.elemId">
-        {{startTooltip.text}} &rarr;
+    <div class="labels-wrapper">
+        <div class="month-label" v-for="label in monthLabels" v-bind:id="label.elemId">
+            {{label.text}}
+        </div>
+        <div v-bind:id="startTooltip.elemId">
+            {{startTooltip.text}} &rarr;
+        </div>
     </div>
 </template>
 
@@ -12,11 +14,11 @@ import moment from 'moment'
 
 export default {
     replace: true,
-    props: ['cosmos', 'evdates', 'param'],
-    methods: {
-        getZPos: function (date) {
-            // Scales a date to its cosmos zpos (proportionally with the events dates distribution)
-            return Math.floor(this.param.startPos + this.param.minZGap * moment(date).diff(this.evdates.dates[0], 'days') / this.evdates.minGap)
+    props: ['cosmos', 'param', 'getzpos'],
+    vuex: {
+        getters: {
+            locale: state => state.locale,
+            dateBounds: (state) => {return {first: moment(state.dateBounds.first), last: moment(state.dateBounds.last)}}
         }
     },
     watch: {
@@ -38,14 +40,15 @@ export default {
     },
     computed: {
         monthLabels: function () {
-            // Check all the days between the first and last events to display month names
+            // Check all the days between the first and last dates to display month names
             var daysTab = []
+            let deltaDays = this.dateBounds.last.diff(this.dateBounds.first, 'days')
             moment.locale(this.locale)
-            if (this.evdates.dates.length > 1) {
+            if (deltaDays > 30) {
                 // Increment dayInc to find out all the months covered
-                var dayInc = this.evdates.dates[0]
+                var dayInc = this.dateBounds.first
                 daysTab.push(dayInc)
-                for (var ii = 1; ii < this.evdates.nbDays; ii++) {
+                for (var ii = 1; ii < deltaDays; ii++) {
                     if (!daysTab[daysTab.length - 1].isSame(dayInc.clone().add(ii, 'days'), 'month')) {
                         daysTab.push(dayInc.clone().add(ii, 'days'))
                     }
@@ -56,7 +59,7 @@ export default {
                     'elemId': 'month-label-' + ii,
                     'xpos': -200,
                     'ypos': 350,
-                    'zpos': this.getZPos(date),
+                    'zpos': this.getzpos(date),
                     'text': date.format('MMMM YYYY')
                 }
             })
@@ -65,7 +68,6 @@ export default {
     data () {
         return {
             startTooltip: {'elemId': 'start-tooltip', 'xpos': -300, 'ypos': 300, 'zpos': 500, 'text': ''},
-            locale: window.navigator.userLanguage || window.navigator.language,
             loaded: false
         }
     }
