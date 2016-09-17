@@ -2,9 +2,8 @@
     {
         "id": "terroparis131115",
         "title": {"en": "Terrorist attacks in Paris", "fr": "Attaques terroristes à Paris"},
-        "visible": true,
         "type": "article",
-        "category": {"en": "society", "fr": "société"},
+        "tags": [{"en": "society", "fr": "société"}, {"en": "france", "fr": "france"}, {"en": "terrorism", "fr": "terrorisme"}],
         "date": "2015-11-13",
         "panels": [
             {"type": "text", "text": {
@@ -19,9 +18,8 @@
         "id": "macronlaw261015",
         "title": {"en": "Emmanuel Macron presents its law project for economy in France",
             "fr": "Emmanuel Macron présente son projet de loi pour l'économie."},
-        "visible": true,
         "type": "article",
-        "category": {"en": "politics", "fr": "politique"},
+        "tags": [{"en": "politics", "fr": "politique"}, {"en": "france", "fr": "france"}, {"en": "economy", "fr": "économie"}],
         "date": "2015-10-26",
         "panels": [
             {"type": "text", "text": {
@@ -36,10 +34,9 @@
     {
         "id": "smashiha100616",
         "title": {"en": "Smashing Pumpkins reunited with James Iha", "fr": "James Iha réintègre les Smashing Pumpkins"},
-        "visible": true,
         "type": "article",
-        "category": {"en": "culture", "fr": "culture"},
-        "date": "2016-08-18",
+        "tags": [{"en": "culture", "fr": "culture"}, {"en": "music", "fr": "musique"}],
+        "date": "2016-10-18",
         "panels": [
             {"type": "text", "text": {
                 "en":"The famous rock band offically announced its reunion this saturday. A come-back concert tour is expected this summer.",
@@ -51,10 +48,9 @@
     },
     {
         "id": "federer22012016",
-        "title": {"en": "Federer reached the threshold of 300 Grand Slam success", "fr": "Federer atteint la barre des 300 succès en Grand Chelem"},
-        "visible": true,
+        "title": {"en": "Federer reached the threshold of 300 Grand Slam success and go and go and go and go", "fr": "Federer atteint la barre des 300 succès en Grand Chelem"},
         "type": "article",
-        "category": {"en": "sport", "fr": "sport"},
+        "tags": [{"en": "sport", "fr": "sport"}, {"en": "tennis", "fr": "tennis"}, {"en": "australia", "fr": "australie"}, {"en": "australiaaa", "fr": "australie"}, {"en": "australia", "fr": "australie"}, {"en": "australia", "fr": "australie"}, {"en": "australia", "fr": "australie"}],
         "date": "2015-01-05",
         "panels": [
             {"type": "text", "text": {
@@ -64,6 +60,22 @@
             {"type": "image", "src": "https://www.rts.ch/2016/01/22/09/33/7434683.image?w=960&h=540"},
             {"type": "image", "src": "http://www.tennislegend.fr/wp-content/uploads/Verdasco-Nadal-Open-Australie-2016-Highlights-Best-points.jpg"},
             {"type": "image", "src": "http://travelinnate.com/wp-content/uploads/2014/04/Sydney-Opera-House-11.jpg"}
+        ]
+    },
+    {
+        "id": "auroras",
+        "title": {"en": "First auroras of the season in Island", "fr": "Premières aurores boréales de la saison en Islande"},
+        "type": "article",
+        "tags": [{"en": "nature", "fr": "nature"}, {"en": "island", "fr": "islande"}],
+        "date": "2016-06-13",
+        "panels": [
+            {"type": "text", "text": {
+                "en":"AURORAS",
+                "fr": "Aurores"
+            }},
+            {"type": "image", "src": "http://www.northernlightscentre.ca/images/northernlights.jpg"},
+            {"type": "image", "src": "http://i.telegraph.co.uk/multimedia/archive/03590/northern-lights-se_3590060k.jpg"},
+            {"type": "image", "src": "http://www.fodors.com/ee/files/slideshows/3-Finland-Northern-Lights.jpg"}
         ]
     }
 ]

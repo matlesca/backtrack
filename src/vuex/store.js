@@ -9,8 +9,10 @@ const state = {
     isInitApp: false,
     appLoading: false,
     bckCol: 'rgb(70, 40, 60)',
-    // locale: window.navigator.userLanguage || window.navigator.language,
-    locale: 'en',
+    momentLocale: window.navigator.userLanguage || window.navigator.language,
+    // locale: (window.navigator.userLanguage || window.navigator.language).substring(0, 2),
+    locale: 'fr',
+    country: (window.navigator.userLanguage || window.navigator.language).substring(0, 2).toUpperCase(),
     // Deezer auth, init
     auth: {},
     isInitPlayer: false,
@@ -19,7 +21,7 @@ const state = {
     currentSongID: 0,
     // Deezer history fetching
     dailySongs: {},
-    dateBounds: {first: '2015-01-04', last: '2016-08-20'},
+    dateBounds: {first: '2015-01-04', last: '2016-09-10'},
     histoBound: 0,
     lastHistoBound: 0,
     loadingSongsIndex: 0,
@@ -27,18 +29,20 @@ const state = {
     delayRequests: 0,
     // Events
     events: loadEvents,
-    selectedEvents: {nb: 0},
     dateEventSongs: {},
+    // SongsTab
+    currentSongsData: [],
+    songsDataLoading: false,
+    groupBy: 'artist',
     // Show event page state
-    currentSongsData: {artists: []},
     currentEvent: {},
     currentDate: false,
     moving: false,
     eventLoading: false,
-    // Navbar
+    // UI components
     showNav: false,
-    // Modals
-    currentModal: false
+    currentModal: false,
+    showSongsTab: false
 }
 
 const mutations = {
@@ -62,6 +66,9 @@ const mutations = {
     },
     SET_AUTH: (state, auth) => {
         state.auth = auth
+    },
+    SET_COUNTRY: (state, country) => {
+        state.country = country
     },
     SET_HISTOBOUND: (state, bound) => {
         state.histoBound = bound
@@ -128,32 +135,31 @@ const mutations = {
     //     }
     // },
     ADD_CURRENTSONGSDATA: (state, songObj) => {
-        var knowArtist = false
-        state.currentSongsData.artists.forEach(artist => {
-            if (artist.id === songObj.artist.id) {
-                knowArtist = true
-                var knowSong = false
-                artist.songs.forEach(song => {
-                    if (song.id === songObj.id) {
-                        knowSong = true
-                    }
-                })
-                if (!knowSong) {
-                    artist.songs.push({id: songObj.id, title: songObj.title, preview: songObj.preview, nb: songObj.nb})
-                }
-                artist.nb += songObj.nb
-            }
-        })
-        if (!knowArtist) {
-            state.currentSongsData.artists.push({id: songObj.artist.id, name: songObj.artist.name, nb: songObj.nb, songs: [{id: songObj.id, nb: songObj.nb, title: songObj.title, preview: songObj.preview}]})
-        }
-    },
-    RESET_SELECTEDEVENTS: (state) => {
-        state.selectedEvents = {nb: 0}
+        state.currentSongsData.push(songObj)
+        // var knowArtist = false
+        // state.currentSongsData.artists.forEach(artist => {
+        //     if (artist.id === songObj.artist.id) {
+        //         knowArtist = true
+        //         var knowSong = false
+        //         artist.songs.forEach(song => {
+        //             if (song.id === songObj.id) {
+        //                 knowSong = true
+        //             }
+        //         })
+        //         if (!knowSong) {
+        //             artist.songs.push({id: songObj.id, title: songObj.title, preview: songObj.preview, nb: songObj.nb})
+        //         }
+        //         artist.nb += songObj.nb
+        //     }
+        // })
+        // if (!knowArtist) {
+        //     state.currentSongsData.artists.push({id: songObj.artist.id, name: songObj.artist.name, nb: songObj.nb, songs: [{id: songObj.id, nb: songObj.nb, title: songObj.title, preview: songObj.preview}]})
+        // }
     },
     RESET_LOADINGPROCESS: (state) => {
         state.dailySongs = {}
-        state.currentSongsData = {artists: []}
+        // state.currentSongsData = {artists: []}
+        state.currentSongsData = []
         state.playing = false
         state.currentSongID = 0
         state.dateBounds = {first: '2015-01-04', last: '2016-08-20'}
@@ -164,21 +170,20 @@ const mutations = {
         state.delayRequests = 0
     },
     RESET_CURRENTSONGS: (state) => {
-        state.currentSongsData = {artists: []}
-    },
-    TOGGLE_SELECTEDEVENT: (state, evId) => {
-        if (state.selectedEvents[evId]) {
-            delete state.selectedEvents[evId]
-        } else {
-            state.selectedEvents[evId] = true
-        }
-        state.selectedEvents.nb = Object.keys(state.selectedEvents).length - 1
+        // state.currentSongsData = {artists: []}
+        state.currentSongsData = []
     },
     INC_DELAYREQUESTS: (state) => {
         state.delayRequests += 40
     },
     SET_MOVING: (state, moving) => {
         state.moving = moving
+    },
+    SET_SONGSDATALOADING: (state, loading) => {
+        state.songsDataLoading = loading
+    },
+    SET_GROUPBY: (state, group) => {
+        state.groupBy = group
     },
     SET_PLAYING: (state, play) => {
         state.playing = play
@@ -197,6 +202,9 @@ const mutations = {
     },
     SET_SHOWNAV: (state, show) => {
         state.showNav = show
+    },
+    SET_SHOWSONGSTAB: (state, show) => {
+        state.showSongsTab = show
     }
 }
 

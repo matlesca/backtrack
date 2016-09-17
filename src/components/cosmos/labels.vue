@@ -4,7 +4,7 @@
             {{label.text}}
         </div>
         <div v-bind:id="startTooltip.elemId">
-            {{startTooltip.text}} &rarr;
+            {{startTooltip.text}}
         </div>
     </div>
 </template>
@@ -18,6 +18,7 @@ export default {
     vuex: {
         getters: {
             locale: state => state.locale,
+            momentLocale: state => state.momentLocale,
             dateBounds: (state) => {return {first: moment(state.dateBounds.first), last: moment(state.dateBounds.last)}}
         }
     },
@@ -26,12 +27,13 @@ export default {
             if (!this.loaded && this.cosmos) {
                 this.cosmos.addLabels(this.monthLabels)
                 if (this.locale === 'fr') {
-                    this.startTooltip.text = 'Pour commencer, choisis une date dans la barre latérale'
-                    this.startTooltip.xpos = -130
-                    this.startTooltip.ypos = 200
+                    this.startTooltip.text = 'Choisit un événement ou une date et découvre tes écoutes musicales de l\'époque !'
+                    this.startTooltip.xpos = -110
+                    this.startTooltip.ypos = 360
                 } else {
-                    this.startTooltip.text = 'Start by choosing a date in the sidebar'
-                    this.startTooltip.ypos = 200
+                    this.startTooltip.text = 'Choose an event or a date, and discover your musical favorites at that time !'
+                    this.startTooltip.xpos = -60
+                    this.startTooltip.ypos = 360
                 }
                 this.cosmos.addLabels([this.startTooltip])
                 this.loaded = true
@@ -43,7 +45,7 @@ export default {
             // Check all the days between the first and last dates to display month names
             var daysTab = []
             let deltaDays = this.dateBounds.last.diff(this.dateBounds.first, 'days')
-            moment.locale(this.locale)
+            moment.locale(this.momentLocale)
             if (deltaDays > 30) {
                 // Increment dayInc to find out all the months covered
                 var dayInc = this.dateBounds.first
@@ -85,7 +87,7 @@ export default {
     font-family: 'Raleway', 'Helvetica', sans-serif;
 }
 #start-tooltip {
-    font-size: 40px;
+    font-size: 30px;
     color: #ffffff;
     opacity: 1;
     font-family: 'Raleway', 'Helvetica', sans-serif;

@@ -17,13 +17,12 @@
 </template>
 
 <script type="text/javascript">
-// import anime from 'animejs'
 /*global anime*/
 
   export default {
       replace: false,
       vuex: {
-          getters: {loading: (state) => state.appLoading || state.eventLoading || state.moving}
+          getters: {loading: (state) => state.appLoading || state.eventLoading || state.moving || state.songsDataLoading}
       },
       props: {size: 'size'},
       watch: {

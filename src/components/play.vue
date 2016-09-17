@@ -1,6 +1,6 @@
 <template>
     <navbar></navbar>
-    <sidebar></sidebar>
+    <!-- <sidebar></sidebar> -->
 
     <cosmos></cosmos>
 
@@ -9,13 +9,12 @@
 </template>
 
 <script>
-import sidebar from './sidebar/sidebar.vue'
 import cosmos from './cosmos/cosmos.vue'
 import navbar from './navbar.vue'
 import songsTab from './songsTab.vue'
 
 export default {
     replace: false,
-    components: {sidebar, cosmos, navbar, 'songs-tab': songsTab}
+    components: {cosmos, navbar, 'songs-tab': songsTab}
 }
 </script>

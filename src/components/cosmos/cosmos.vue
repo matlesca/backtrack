@@ -18,7 +18,6 @@ export default {
     components: {'event-grid': eventGrid, labels},
     vuex: {
         getters: {
-            events: (state) => state.events.filter(ev => ev.visible),
             currentDate: (state) => state.currentDate,
             dateBounds: (state) => {
                 return {first: moment(state.dateBounds.first, 'YYYY-MM-DD'), last: moment(state.dateBounds.last, 'YYYY-MM-DD')}

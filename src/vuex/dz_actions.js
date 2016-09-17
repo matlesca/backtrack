@@ -2,7 +2,7 @@
 import moment from 'moment'
 
 // DEEZER INIT :
-export function initApp ({dispatch}) {
+export function initApp ({dispatch}, http) {
     return new Promise(function (resolve, reject) {
         DZ.init({
             appId: '172545',
@@ -17,17 +17,20 @@ export function initApp ({dispatch}) {
         // Check if already connected :
         DZ.getLoginStatus(function (response) {
             if (response.authResponse) {
-                dispatch('SET_AUTH', response)
                 if (response.status === 'connected') {
                     dispatch('SET_ALLOWFULLSONGS', true)
                 } else {
                     dispatch('SET_ALLOWFULLSONGS', false)
                 }
+                DZ.api('/user/me', function (response) {
+                    dispatch('SET_AUTH', response)
+                })
             } else {
                 dispatch('SET_AUTH', {})
                 dispatch('SET_ALLOWFULLSONGS', false)
             }
         })
+
         resolve()
     })
 }
@@ -74,7 +77,7 @@ export function login ({dispatch}) {
                 dispatch('SET_ALLOWFULLSONGS', false)
                 reject({type: 'auth', message: 'Couldn\'t connect, please try to log-in again'})
             }
-        }, {perms: 'basic_access, email, listening_history'})
+        }, {perms: 'basic_access, listening_history'})
     })
 }
 export function logout ({dispatch}) {
@@ -123,29 +126,33 @@ export function getAllSongs ({dispatch, state}) {
 // FETCH SONGS :
 function getAPISongsHisto (index, limit, strict, delay) {
     return new Promise(function (resolve, reject) {
-        setTimeout(() => {
-            if (typeof index === 'number' && typeof limit === 'number' && (index % 1) === 0 && (limit % 1) === 0) {
-                DZ.api('/user/me/history&index=' + index + '&limit=' + limit, function (response) {
-                    if (response.data) {
-                        if (response.data.length === 0) {
-                            if (strict) {
-                                reject({code: 800, message: 'Empty results array', content: response, 'index': index, 'limit': limit})
+        if (index > 3000 && false) {
+            reject({code: 800, message: 'Empty results array', 'index': index, 'limit': limit})
+        } else {
+            setTimeout(() => {
+                if (typeof index === 'number' && typeof limit === 'number' && (index % 1) === 0 && (limit % 1) === 0) {
+                    DZ.api('/user/me/history&index=' + index + '&limit=' + limit, function (response) {
+                        if (response.data) {
+                            if (response.data.length === 0) {
+                                if (strict) {
+                                    reject({code: 800, message: 'Empty results array', content: response, 'index': index, 'limit': limit})
+                                } else {
+                                    resolve({'index': index, 'limit': limit, 'data': []})
+                                }
                             } else {
-                                resolve({'index': index, 'limit': limit, 'data': []})
+                                resolve({'index': index, 'limit': limit, 'data': response.data})
                             }
+                        } else if (response.error) {
+                            reject({'message': response.error, 'index': index, 'limit': limit})
                         } else {
-                            resolve({'index': index, 'limit': limit, 'data': response.data})
+                            reject({message: 'No response', 'index': index, 'limit': limit})
                         }
-                    } else if (response.error) {
-                        reject({'message': response.error, 'index': index, 'limit': limit})
-                    } else {
-                        reject({message: 'No response', 'index': index, 'limit': limit})
-                    }
-                })
-            } else {
-                reject({message: 'The index & limit should be integers', 'index': index, 'limit': limit})
-            }
-        }, delay)
+                    })
+                } else {
+                    reject({message: 'The index & limit should be integers', 'index': index, 'limit': limit})
+                }
+            }, delay)
+        }
     })
 }
 export function getAPISongInfo (songId, delay) {
@@ -168,7 +175,9 @@ export function getAPISongInfo (songId, delay) {
 function loopBounds (dispatch, state, resolve, reject) {
     var delta
     getAPISongsHisto(state.histoBound, 50, true, state.delayRequests).then(result => {
-        dispatch('RESET_TIMESFAILED')
+        if (state.histoBound >= 100) {
+            dispatch('RESET_TIMESFAILED')
+        }
         if (result.data.length >= 50) {
             // 50 results, try with a higher bound
             if (state.lastHistoBound > state.histoBound) {
@@ -195,7 +204,7 @@ function loopBounds (dispatch, state, resolve, reject) {
         } else if (error.code === 800) {
             // No data found, try with a lower bound
             dispatch('INC_TIMESFAILED')
-            if (state.histoBound < 100 && state.timesFailed > 10) {
+            if (state.timesFailed > 10) {
                 reject({type: 'histo', message: 'Your listening history is too short, try again in a few days !'})
             } else {
                 if (state.lastHistoBound > state.histoBound) {
@@ -252,7 +261,9 @@ function loopDailySongsHisto (dispatch, state, resolve, reject, indexesTab) {
                     resProm()
                 }).catch(error => {
                     // If quota exceeded => remember missing index to try it again later, and continue loading histo
-                    missedIndexes.push(error.index)
+                    if (typeof error.index === 'number' && (error.index % 1) === 0) {
+                        missedIndexes.push(error.index)
+                    }
                     resProm()
                 })
             }).catch(error => {

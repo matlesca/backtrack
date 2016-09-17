@@ -1,5 +1,4 @@
 /*global THREE*/
-// import THREE from 'three'
 import TWEEN from 'tween.js'
 import StarSystem from './starSystem.js'
 import CloudSystem from './cloudSystem.js'

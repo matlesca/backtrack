@@ -20,6 +20,7 @@ export default {
         getters: {
             currentEvent: (state) => state.currentEvent,
             currentDate: (state) => state.currentDate,
+            momentLocale: state => state.momentLocale,
             locale: state => state.locale
         },
         actions: {setEventLoading}
@@ -139,7 +140,7 @@ export default {
         }
     },
     created: function () {
-        moment.locale(this.locale)
+        moment.locale(this.momentLocale)
     },
     data () {
         return {

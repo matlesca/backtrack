@@ -12,9 +12,7 @@
             <span v-show="currentHeader === 'connectError'" transition="head">{{connectErrorMessage}}</span>
             <span v-show="currentHeader === 'songLoading'" transition="head">Fetching your music listening history..</span>
             <span v-show="currentHeader === 'songError'" transition="head">Server error, Backtrack loaded only {{loadingSongsIndex}}/{{histoBound - 1}} songs</span>
-            <span v-show="currentHeader === 'analyseSongs'" transition="head">Analysing songs..</span>
             <span v-show="currentHeader === 'playerLoading'" transition="head">Loading the music player..</span>
-            <span v-show="currentHeader === 'allDone'" transition="head">All done !</span>
         </h1>
         <div class="loading-bar-wrapper" v-show="currentHeader === 'songLoading'" transition="opac">
             <div class="loading-bar-back" v-bind:style="{backgroundColor: bckCol}">
@@ -40,13 +38,8 @@
                 Continue
             </button>
         </div>
-        <div class="header-bt-wrapper bt-error" v-show="currentHeader === 'allDone'" transition="opac">
-            <button type="button" class="bt-violet" name="button" v-on:click="goPlay()">
-                Go to your timeline
-            </button>
-        </div>
         <div class="header-about-wrap">
-            <a v-on:click="setCurrentModal('addevNews')">About</a>
+            <a v-on:click="setCurrentModal('about')">About</a>
         </div>
     </div>
 </template>
@@ -55,13 +48,12 @@
 import applogo from './applogo.vue'
 import {logout, login, initApp, initPlayer, getHistoBound, getAllSongs, resetSongs} from '../vuex/dz_actions'
 import {setAppLoading, setCurrentModal} from '../vuex/ui_actions'
-import {analyseSongEvents} from '../vuex/algo_actions'
 import Cosmos from './cosmos/cosmosRendering.js'
 
 export default {
     components: {'app-logo': applogo},
     vuex: {
-        actions: {setAppLoading, logout, login, initApp, initPlayer, getHistoBound, getAllSongs, resetSongs, analyseSongEvents, setCurrentModal},
+        actions: {setAppLoading, logout, login, initApp, initPlayer, getHistoBound, getAllSongs, resetSongs, setCurrentModal},
         getters: {
             // Init app :
             auth: state => state.auth,
@@ -104,7 +96,7 @@ export default {
                     this.connectErrorMessage = error.message
                 })
             } else {
-                this.initApp().then(this.startLoading)
+                this.initApp().then(this.startConnect)
             }
         },
         tryAgain: function () {
@@ -126,7 +118,6 @@ export default {
             this.currentHeader = 'songLoading'
             this.setAppLoading(true)
             this.getAllSongs().then(() => {
-                // this.analyseSongs()
                 this.loadPlayer()
             }).catch(error => {
                 console.log(error)
@@ -134,19 +125,12 @@ export default {
                 this.currentHeader = 'songError'
             })
         },
-        analyseSongs: function () {
-            this.currentHeader = 'analyseSongs'
-            this.setAppLoading(true)
-            setTimeout(() => {
-                this.analyseSongEvents('all').then(() => this.loadPlayer()).catch(error => console.log(error.message))
-            }, 400)
-        },
         loadPlayer: function () {
             this.currentHeader = 'playerLoading'
             this.setAppLoading(true)
             this.initPlayer().then(() => {
-                this.currentHeader = 'allDone'
                 this.setAppLoading(false)
+                this.goPlay()
             })
         },
         goPlay: function () {

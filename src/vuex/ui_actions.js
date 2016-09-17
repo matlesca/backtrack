@@ -20,11 +20,14 @@ export function setCurrentModal ({dispatch}, modal) {
 export function toggleShowNav ({dispatch, state}) {
     dispatch('SET_SHOWNAV', !state.showNav)
 }
-export function toggleSelectedEvent ({dispatch}, evId) {
-    dispatch('TOGGLE_SELECTEDEVENT', evId)
+export function setShowSongsTab ({dispatch}, show) {
+    dispatch('SET_SHOWSONGSTAB', show)
 }
-export function resetSelectedEvents ({dispatch}) {
-    dispatch('RESET_SELECTEDEVENTS')
+export function toggleSongsTab ({dispatch, state}) {
+    dispatch('SET_SHOWSONGSTAB', !state.showSongsTab)
+}
+export function setGroupBy ({dispatch}, group) {
+    dispatch('SET_GROUPBY', group)
 }
 
 export function initState ({dispatch}) {
@@ -45,23 +48,26 @@ export function initState ({dispatch}) {
     })
 }
 
-export function clickEvent ({dispatch, state}, event) {
+export function clickCard ({dispatch, state}, obj) {
     if (!state.moving) {
         dispatch('SET_MOVING', true)
-        dispatch('SET_CURRENTEVENT', event)
-        dispatch('SET_CURRENTDATE', event.date)
-        dispatch('SET_SHOWNAV', false)
-        dispatch('RESET_CURRENTSONGS')
-        updateSongsFromDate({dispatch, state}, event.date)
+        if (obj.tags) {
+            dispatch('SET_CURRENTEVENT', obj)
+        } else {
+            dispatch('SET_CURRENTEVENT', {})
+        }
+        dispatch('SET_CURRENTDATE', obj.start || obj.date)
+        dispatch('SET_CURRENTMODAL', false)
         if (state.playing) {
             dispatch('SET_PLAYING', false)
             DZ.player.pause()
         }
+        setTimeout(() => {
+            dispatch('RESET_CURRENTSONGS')
+            dispatch('SET_SONGSDATALOADING', true)
+            updateSongsFromDate({dispatch, state}, obj.start || obj.date, obj.end || obj.date, obj.gap || 3).then(() => dispatch('SET_SONGSDATALOADING', false))
+        }, 500)
     }
-}
-
-export function chooseEvent ({dispatch, state}, event) {
-
 }
 
 export function chooseDate ({dispatch, state}, event) {

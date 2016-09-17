@@ -20,12 +20,24 @@
             <p class="about-text small">
                 <span>Icons from the Noun Project :</span>
                 <br>
-                Facebook <em>by Niels Gesquiere</em>,
-                Music Note <em>by Tancrède Chaleil</em>,
                 Newspaper <em>by Shane Herzog</em>,
+                Calendar <em>by Edward Boatman</em>,
                 Share <em>by Margot Nadot</em>,
                 Logout <em>by Olga Prikhodko</em>,
-                Home <em>by Viktor Vorobyev</em>
+                Home <em>by Viktor Vorobyev</em>,
+                Sun <em>by creative outlet</em>,
+                Chinese motif <em>by Rflor</em>,
+                Turkey <em>by Pumpkin Juice</em>,
+                Drum <em>by Creative Stall</em>,
+                Pumpkin <em>by artworkbean</em>,
+                Rabbit Foot <em>by Richard Zeid</em>,
+                Heart <em>by Okan Benn</em>,
+                Fireworks <em>by Sergey Demushkin</em>,
+                Christmas ornament <em>by Retinaicon</em>,
+                Family <em>by Sara</em>,
+                Tree <em>by Florent</em>,
+                Flower <em>by Brad Ashburn</em>,
+                Tea Leaves <em>by Korawan.M</em>
             </p>
             <span class="about-text medium">Why Backtrack</span>
             <p class="about-text small">
@@ -37,14 +49,8 @@
             <p class="about-text small">
                 Attracted by the experience? Go on and connect with your Deezer account!
             </p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
         </div>
-
-        <svg class="modal-logo" viewBox="0 0 10 10">
-            <text x="8%" y="78%" font-size="11px" font-family="Roboto, sans-serif">@</text>
-        </svg>
     </div>
 </template>
 
