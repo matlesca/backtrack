@@ -1,8 +1,8 @@
 <template>
     <div class="nec-wrapper">
-        <div class="nec-card" v-bind:id="'nec-card-' + event.id" v-on:click="clickCard(event)">
-            <div class="nec-img-wrapper" v-bind:id="'nec-img-wrapper-' + event.id">
-                <img v-bind:src="imageLink" v-bind:id="'nec-img-' + event.id" v-bind:alt="locale === 'fr' ? event.title.fr : event.title.en" />
+        <div class="nec-card" v-bind:id="'nec-card-' + event.id + context" v-on:click="clickCard(event)">
+            <div class="nec-img-wrapper" v-bind:id="'nec-img-wrapper-' + event.id + context">
+                <img v-bind:src="event.images[0]" v-bind:id="'nec-img-' + event.id + context" v-bind:alt="locale === 'fr' ? event.title.fr : event.title.en" />
             </div>
             <div class="nec-card-caption">
                 <div class="nec-tags-wrapper">
@@ -26,7 +26,7 @@ import {clickCard} from '../../vuex/ui_actions.js'
 
 export default {
     replace: true,
-    props: ['event'],
+    props: ['event', 'context'],
     vuex: {
         getters: {
             locale: state => state.locale
@@ -35,15 +35,6 @@ export default {
     },
     computed: {
         formatDate: function () {return moment(this.event.date, 'YYYY-MM-DD').format('ll')},
-        imageLink: function () {
-            var ret = false
-            this.event.panels.forEach(pan => {
-                if (!ret && pan.type === 'image') {
-                    ret = pan.src
-                }
-            })
-            return ret
-        },
         formatTags: function () {
             if (this.locale === 'fr') {
                 return this.event.tags.map(tag => tag['fr'].charAt(0).toUpperCase() + tag['fr'].slice(1))
@@ -53,9 +44,9 @@ export default {
         }
     },
     ready: function () {
-        var myImg = document.getElementById('nec-img-' + this.event.id)
-        var myWrap = document.getElementById('nec-img-wrapper-' + this.event.id)
-        var myCard = document.getElementById('nec-card-' + this.event.id)
+        var myImg = document.getElementById('nec-img-' + this.event.id + this.context)
+        var myWrap = document.getElementById('nec-img-wrapper-' + this.event.id + this.context)
+        var myCard = document.getElementById('nec-card-' + this.event.id + this.context)
         imagesLoaded(myImg, () => {
             setTimeout(() => {
                 if (myImg.offsetHeight / myWrap.offsetHeight < myImg.offsetWidth / myWrap.offsetWidth) {
@@ -80,6 +71,7 @@ export default {
 .nec-wrapper {
     width: 25%; display: inline-block;
     height: 400px; position: relative;
+    max-height: 100%;
 }
 .nec-card {
     position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px;

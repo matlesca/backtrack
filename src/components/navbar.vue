@@ -11,7 +11,7 @@
 		              L331.776,0L0,296.448z M514.561,546.049h-88.32V341.76h-192v204.289h-86.016V225.792L331.776,62.208l182.785,163.584V546.049z"/>
             </svg>
             <span class="navbar-side-btn-caption one-line">
-                Home
+                {{locale === 'fr' ? 'Accueil' : 'Home'}}
             </span>
         </a>
         <a class="navbar-side-btn" v-bind:class="{'active': auth.status && !loading}" v-on:click="btnModal('addevNews')">
@@ -40,9 +40,9 @@
                     C26.139,33.178,19.591,39.726,11.514,39.726z"/>
             </svg>
             <span class="navbar-side-btn-caption">
-                Search
+                {{locale === 'fr' ? 'Chercher' : 'Search'}}
                 <br>
-                from event
+                {{locale === 'fr' ? 'événement' : 'from event'}}
             </span>
         </a>
         <a class="navbar-side-btn" v-bind:class="{'active': auth.status && !loading}" v-on:click="btnModal('addevDates')">
@@ -66,12 +66,12 @@
                     C60.387,33.178,53.839,39.727,45.762,39.727z"/>
             </svg>
             <span class="navbar-side-btn-caption">
-                Search
+                {{locale === 'fr' ? 'Chercher' : 'Search'}}
                 <br>
-                from date
+                {{locale === 'fr' ? 'par date' : 'from date'}}
             </span>
         </a>
-        <a class="navbar-side-btn" v-on:click="btnShare" v-bind:class="{'active': (auth.status && currentEvent.id && !loading)}">
+        <a class="navbar-side-btn" v-on:click="btnModal('share')" v-bind:class="{'active': (auth.status && currentEvent.id && !loading)}">
             <svg class="navbar-side-btn-logo" viewBox="0 0 460.815 614.4">
                 <path d="M364.815,422.4c-20.099,0-38.854,6.229-54.298,16.834l-124.723-98.065c3.978-10.575,6.229-21.935,6.229-33.977
                 	c0-12.304-2.404-24.076-6.598-34.875l122.85-98.665c15.812,11.52,35.39,18.347,56.54,18.347c53.022,0,96-42.977,96-96
@@ -81,7 +81,7 @@
                 	c53.022,0,96-42.978,96-96S417.838,422.4,364.815,422.4z"/>
             </svg>
             <span class="navbar-side-btn-caption one-line">
-                Share
+                {{locale === 'fr' ? 'Partager' : 'Share'}}
             </span>
         </a>
         <a class="navbar-side-btn" v-on:click="btnLogout" v-bind:class="{'active': auth.status}">
@@ -98,7 +98,7 @@
             		C788.146,387.289,785.684,380.522,780.574,375.412z"/>
             </svg>
             <span class="navbar-side-btn-caption one-line">
-                Log-out
+                {{locale === 'fr' ? 'Déconnexion' : 'Log-out'}}
             </span>
         </a>
     </div>
@@ -108,7 +108,7 @@
 
 <script type="text/javascript">
   import applogo from './applogo.vue'
-  import {toggleShowNav, initState, setCurrentModal} from '../vuex/ui_actions'
+  import {toggleShowNav, pauseState, setCurrentModal} from '../vuex/ui_actions'
   import {logout} from '../vuex/dz_actions'
 
   export default {
@@ -120,20 +120,21 @@
             showNav: state => state.showNav,
             events: state => state.events,
             currentEvent: state => state.currentEvent,
-            auth: state => state.auth
+            auth: state => state.auth,
+            locale: state => state.locale
         },
-        actions: {toggleShowNav, initState, logout, setCurrentModal}
+        actions: {toggleShowNav, pauseState, logout, setCurrentModal}
     },
     methods: {
         btnLogout: function () {
-            this.initState().then(() => {
+            this.pauseState().then(() => {
                 this.logout().then(() => {
                     this.$router.go('/')
                 })
             })
         },
         btnHome: function () {
-            this.initState().then(() => {
+            this.pauseState().then(() => {
                 this.$router.go('/')
             })
         },
@@ -141,9 +142,6 @@
             if (this.auth.status && !this.loading) {
                 this.setCurrentModal(type)
             }
-        },
-        btnShare: function () {
-            console.log('The share feature is not available yet :)')
         }
     }
   }

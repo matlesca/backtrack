@@ -8,6 +8,7 @@
             </svg>
         </a>
         <about v-if="currentModal === 'about'"></about>
+        <share v-if="currentModal === 'share'"></share>
         <addev-news v-if="currentModal === 'addevNews'"></addev-news>
         <addev-dates v-if="currentModal === 'addevDates'"></addev-dates>
     </div>
@@ -17,12 +18,13 @@
 <script type="text/javascript">
 import {setCurrentModal} from '../../vuex/ui_actions'
 import about from './about.vue'
+import share from './share.vue'
 import addevNews from './addevNews.vue'
 import addevDates from './addevDates.vue'
 
 export default {
     replace: true,
-    components: {about, 'addev-news': addevNews, 'addev-dates': addevDates},
+    components: {about, share, 'addev-news': addevNews, 'addev-dates': addevDates},
     vuex: {
         actions: {setCurrentModal},
         getters: {
@@ -117,7 +119,7 @@ export default {
 }
 .modal-btn-close polygon {fill: #E0E3DA;}
 
-.search-logo {
+.modal-search .search-logo {
     position: absolute; top: 25%; left: 10px;
     height: 50%;
     fill: #E0E3DA;

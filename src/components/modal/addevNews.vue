@@ -1,8 +1,7 @@
 <template>
     <div class="modal-inner evsmodal">
         <div class="modal-title">
-            <span v-if="locale === 'fr'" class="modal-title-title">Choisis un événement</span>
-            <span v-if="locale !== 'fr'" class="modal-title-title">Choose event</span>
+            <span class="modal-title-title">{{locale === 'fr' ? 'Choisis un événement' : 'Choose event'}}</span>
             <div class="modal-search">
                 <svg class="search-logo" viewBox="0 0 66.616 66.613">
                     <path d="M0,20.851c0,11.516,9.336,20.852,20.852,20.852c4.313,0,8.318-1.311,11.644-3.553l27.291,27.291
@@ -16,7 +15,7 @@
             </div>
         </div>
         <div class="modal-scroll">
-            <news-event-card v-for="event in displayEvents" :event="event"></news-event-card>
+            <news-event-card v-for="event in displayEvents" :context="'modal'" :event="event"></news-event-card>
         </div>
     </div>
 </template>
@@ -34,7 +33,8 @@ export default {
         actions: {getIntervalSongs},
         getters: {
             events: state => state.events,
-            locale: state => state.locale
+            locale: state => state.locale,
+            currentEvent: state => state.currentEvent
         }
     },
     created: function () {
@@ -58,8 +58,7 @@ export default {
         dataEvents: function () {
             let retTab = []
             this.events.forEach(ev => {
-                // if (this.getIntervalSongs(ev.date, ev.date, 12).length > 10) {
-                if (true) {
+                if (this.currentEvent !== ev) {
                     retTab.push(ev)
                     let evIndex = {
                         'id': ev.id,

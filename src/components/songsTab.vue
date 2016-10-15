@@ -1,7 +1,7 @@
 <template>
-    <div class="songs-tab-wrapper" v-bind:class="{'extended': showSongsTab && visibleTab && !songsDataLoading}">
+    <div class="songs-tab-wrapper" v-show="visibleTab" v-bind:class="{'extended': showSongsTab && visibleTab && !songsDataLoading}">
         <songs-tab-player :visibletab="visibleTab"></songs-tab-player>
-        <div class="playlist-wrapper">
+        <div class="playlist-wrapper" v-show="showSongsTab && visibleTab && !songsDataLoading">
             <div v-if="groupBy === 'artist' || groupBy === 'album'" class="group-bloc" v-for="tab in displayGrouped">
                 <div class="group-pic-wrap">
                     <div class="group-pic-crop">
@@ -48,13 +48,7 @@ export default {
     vuex: {
         getters: {
             showSongsTab: state => state.showSongsTab,
-            currentSongsData: state => {
-                if (state.currentSongsData.length > 0) {
-                    return state.currentSongsData
-                } else {
-                    return JSON.parse('[{"id":128528305,"title":"Morning","artist":{"id":5392331,"name":"Joakim Karud"},"album":{"id":13577183,"name":"Dizzy Compilation"},"preview":"http://cdn-preview-c.deezer.com/stream/c9a19bc676f41c3349cdccb1295c5c20-2.mp3","nb":25},{"id":128528307,"title":"Just Drive","artist":{"id":5392331,"name":"Joakim Karud"},"album":{"id":13577183,"name":"Dizzy Compilation"},"preview":"http://cdn-preview-f.deezer.com/stream/f2fa2b8bc783d2cc4fa9ca4c2525827b-2.mp3","nb":24},{"id":128528303,"title":"Search","artist":{"id":5392331,"name":"Joakim Karud"},"album":{"id":13577183,"name":"Dizzy Compilation"},"preview":"http://cdn-preview-5.deezer.com/stream/54f3a61e2cc52d60943cebfd46f792cb-2.mp3","nb":23},{"id":128528309,"title":"Wait a Minute","artist":{"id":5392331,"name":"Joakim Karud"},"album":{"id":13577183,"name":"Dizzy Compilation"},"preview":"http://cdn-preview-9.deezer.com/stream/95bd06e9cf1b0a57331c8ce7651a66bf-2.mp3","nb":23},{"id":128528301,"title":"Dizzy","artist":{"id":5392331,"name":"Joakim Karud"},"album":{"id":13577183,"name":"Dizzy Compilation"},"preview":"http://cdn-preview-5.deezer.com/stream/512b176801b4a4fdfd1ab52d44a6257c-2.mp3","nb":21},{"id":128528311,"title":"Wild Flower","artist":{"id":5392331,"name":"Joakim Karud"},"album":{"id":13577183,"name":"Dizzy Compilation"},"preview":"http://cdn-preview-1.deezer.com/stream/142928ccf3fbb5a5867f55a35c6c1c90-2.mp3","nb":21},{"id":128528313,"title":"Beach","artist":{"id":5392331,"name":"Joakim Karud"},"album":{"id":13577183,"name":"Dizzy Compilation"},"preview":"http://cdn-preview-4.deezer.com/stream/440fc10023d5c39d358241b494267eca-2.mp3","nb":17},{"id":128528315,"title":"Anytime","artist":{"id":5392331,"name":"Joakim Karud"},"album":{"id":13577183,"name":"Dizzy Compilation"},"preview":"http://cdn-preview-5.deezer.com/stream/5a229610dcb0dd724304c189088e248b-2.mp3","nb":16},{"id":128528319,"title":"10k","artist":{"id":5392331,"name":"Joakim Karud"},"album":{"id":13577183,"name":"Dizzy Compilation"},"preview":"http://cdn-preview-8.deezer.com/stream/81e362b7cb2f37ac98ac87108da0a2df-2.mp3","nb":15},{"id":128528321,"title":"Vacation","artist":{"id":5392331,"name":"Joakim Karud"},"album":{"id":13577183,"name":"Dizzy Compilation"},"preview":"http://cdn-preview-a.deezer.com/stream/a65bd7433878561ed3fe6a133ba8728d-2.mp3","nb":15},{"id":128528317,"title":"Piano & Sax","artist":{"id":5392331,"name":"Joakim Karud"},"album":{"id":13577183,"name":"Dizzy Compilation"},"preview":"http://cdn-preview-9.deezer.com/stream/939328bd43c26bd9c65c60fa4e549004-2.mp3","nb":14},{"id":873280,"title":"So Long, Marianne","artist":{"id":1834,"name":"Leonard Cohen"},"album":{"id":99375,"name":"The Collection"},"preview":"http://cdn-preview-9.deezer.com/stream/9fff7a2de62651b21ae69a53a7a79852-1.mp3","nb":14},{"id":107474518,"title":"Oh! You Pretty Things (2015 Remastered Version)","artist":{"id":997,"name":"David Bowie"},"album":{"id":11205658,"name":"Hunky Dory"},"preview":"http://cdn-preview-3.deezer.com/stream/3d8bd0525bec7983a8638b51fd6a5416-4.mp3","nb":11},{"id":118203088,"title":"I\'m Painting Money","artist":{"id":78484,"name":"Get Well Soon"},"album":{"id":12281030,"name":"LOVE"},"preview":"http://cdn-preview-2.deezer.com/stream/2a003bb315218148cd43b8a394ac2547-3.mp3","nb":9},{"id":107474522,"title":"Life On Mars? (2015 Remastered Version)","artist":{"id":997,"name":"David Bowie"},"album":{"id":11205658,"name":"Hunky Dory"},"preview":"http://cdn-preview-c.deezer.com/stream/c9ff46cbfc2ce921ca75dfb3713c38c5-4.mp3","nb":9},{"id":118203086,"title":"Young Count Falls For Nurse","artist":{"id":78484,"name":"Get Well Soon"},"album":{"id":12281030,"name":"LOVE"},"preview":"http://cdn-preview-8.deezer.com/stream/8256867c1dabcfe5346806d3547096e3-4.mp3","nb":8},{"id":107474528,"title":"Fill Your Heart (2015 Remastered Version)","artist":{"id":997,"name":"David Bowie"},"album":{"id":11205658,"name":"Hunky Dory"},"preview":"http://cdn-preview-4.deezer.com/stream/4a4a6dda058ffc0ff42171f3f1246514-4.mp3","nb":8},{"id":107474524,"title":"Kooks (2015 Remastered Version)","artist":{"id":997,"name":"David Bowie"},"album":{"id":11205658,"name":"Hunky Dory"},"preview":"http://cdn-preview-f.deezer.com/stream/f780c55fee6dd885936be53862b2530c-4.mp3","nb":8},{"id":118203090,"title":"It\'s A Mess","artist":{"id":78484,"name":"Get Well Soon"},"album":{"id":12281030,"name":"LOVE"},"preview":"http://cdn-preview-f.deezer.com/stream/f8a03e5d65a7e35e03918d3858025774-3.mp3","nb":7},{"id":107474534,"title":"Queen Bitch (2015 Remastered Version)","artist":{"id":997,"name":"David Bowie"},"album":{"id":11205658,"name":"Hunky Dory"},"preview":"http://cdn-preview-e.deezer.com/stream/e469ecb2f9e390babdc67bb1d7e23b98-4.mp3","nb":7},{"id":118203082,"title":"Marienbad","artist":{"id":78484,"name":"Get Well Soon"},"album":{"id":12281030,"name":"LOVE"},"preview":"http://cdn-preview-3.deezer.com/stream/3a386bb077e44c46085327dc899c27aa-3.mp3","nb":6},{"id":107474532,"title":"Song For Bob Dylan (2015 Remastered Version)","artist":{"id":997,"name":"David Bowie"},"album":{"id":11205658,"name":"Hunky Dory"},"preview":"http://cdn-preview-2.deezer.com/stream/20da119594bc94290a4c99c1be99fa0a-4.mp3","nb":6},{"id":61573235,"title":"Golden Revolver","artist":{"id":1389120,"name":"San Cisco"},"album":{"id":6033686,"name":"Awkward"},"preview":"http://cdn-preview-5.deezer.com/stream/5ed99a011e4ae675d56f344927a5a034-3.mp3","nb":6},{"id":118203092,"title":"It\'s A Fog","artist":{"id":78484,"name":"Get Well Soon"},"album":{"id":12281030,"name":"LOVE"},"preview":"http://cdn-preview-b.deezer.com/stream/bff3e4d20dcdbe5837bb9cb999e5984a-3.mp3","nb":6},{"id":107474520,"title":"Eight Line Poem (2015 Remastered Version)","artist":{"id":997,"name":"David Bowie"},"album":{"id":11205658,"name":"Hunky Dory"},"preview":"http://cdn-preview-b.deezer.com/stream/b9062abbce8011cf0fd1bdf94b0d2e02-4.mp3","nb":6},{"id":107474526,"title":"Quicksand (2015 Remastered Version)","artist":{"id":997,"name":"David Bowie"},"album":{"id":11205658,"name":"Hunky Dory"},"preview":"http://cdn-preview-8.deezer.com/stream/894b7b1fcaf5e11979d19522bf20bad1-4.mp3","nb":6},{"id":118203084,"title":"33","artist":{"id":78484,"name":"Get Well Soon"},"album":{"id":12281030,"name":"LOVE"},"preview":"http://cdn-preview-c.deezer.com/stream/c93b10971c8509e4a50f5c23ef25c72c-3.mp3","nb":6},{"id":62269627,"title":"Girls Do Cry","artist":{"id":1389120,"name":"San Cisco"},"album":{"id":6033686,"name":"Awkward"},"preview":"http://cdn-preview-9.deezer.com/stream/96a4ee6d0a6c7f8d555671e7b1238b87-3.mp3","nb":5},{"id":61573234,"title":"Awkward (EP Version)","artist":{"id":1389120,"name":"San Cisco"},"album":{"id":6033686,"name":"Awkward"},"preview":"http://cdn-preview-2.deezer.com/stream/25e4e47d6e7752c5f6c9d6756fc81016-3.mp3","nb":5},{"id":61573236,"title":"Reckless","artist":{"id":1389120,"name":"San Cisco"},"album":{"id":6033686,"name":"Awkward"},"preview":"http://cdn-preview-0.deezer.com/stream/0a127694e3644b2d9264911addc63d22-3.mp3","nb":5}]')
-                }
-            },
+            currentSongsData: state => state.currentSongsData,
             playing: state => state.playing,
             moving: state => state.moving,
             songsDataLoading: state => state.songsDataLoading,
@@ -69,14 +63,11 @@ export default {
             if (newVal) {
                 this.dirtyMove = false
             }
-        },
-        groupBy: function () {
-
         }
     },
     methods: {
         clickSong: function (songID) {
-            if (songID === this.currentSongID) {
+            if (parseInt(songID, 10) === parseInt(this.currentSongID, 10)) {
                 this.togglePlayerPlay()
             } else {
                 let playlistRank = 0
@@ -94,7 +85,6 @@ export default {
             if (!this.moving && this.currentDate && !this.songsDataLoading) {
                 if (!this.playing && !this.dirtyMove) {
                     this.setPlayerSongs(this.playlist, 0)
-                    this.setShowSongsTab(true)
                     this.dirtyMove = true
                 }
                 return true
@@ -126,13 +116,25 @@ export default {
                 })
                 retTab.sort((a, b) => b.nb - a.nb)
                 retTab.forEach(group => {
-                    group.songs.sort((a, b) => b.nb - a.nb)
+                    group.songs.sort((a, b) => {
+                        if (b.nb === a.nb) {
+                            return a.id - b.id
+                        } else {
+                            return b.nb - a.nb
+                        }
+                    })
                     group.songs.forEach(song => {
                         playTemp.push(song)
                     })
                 })
             } else if (this.groupBy === 'track') {
-                playTemp = this.currentSongsData.sort((a, b) => b.nb - a.nb)
+                playTemp = this.currentSongsData.sort((a, b) => {
+                    if (b.nb === a.nb) {
+                        return a.id - b.id
+                    } else {
+                        return b.nb - a.nb
+                    }
+                })
             }
             if (playTemp.length > 0) {
                 this.changeSongsOrder(playTemp)

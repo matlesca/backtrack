@@ -5,15 +5,32 @@
         <div class="header-logo-wrapper">
             <app-logo size="big"></app-logo>
         </div>
-        <h1 class="header-message">
-            <span v-show="currentHeader === 'welcome'" transition="head">Your personnal music time machine</span>
-            <span v-show="currentHeader === 'authLoading'" transition="head">Fetching your account information..</span>
-            <span v-show="currentHeader === 'helloX'" transition="head">Hello {{loginName}} !</span>
+        <div class="header-message">
+            <span v-show="currentHeader === 'welcome'" transition="head">
+            {{locale === 'fr' ? 'Redécouvre ton historique d\'écoute musical' : 'Find out what you listened to in the past'}}
+            </span>
+            <span v-show="currentHeader === 'authLoading'" transition="head">
+            {{locale === 'fr' ? 'Connexion en cours..' : 'Fetching your account information..'}}
+            </span>
+            <span v-show="currentHeader === 'helloX'" transition="head">
+            {{locale === 'fr' ? 'Salut ' + loginName + ' !' : 'Hello ' + loginName + ' !'}}
+            </span>
             <span v-show="currentHeader === 'connectError'" transition="head">{{connectErrorMessage}}</span>
-            <span v-show="currentHeader === 'songLoading'" transition="head">Fetching your music listening history..</span>
-            <span v-show="currentHeader === 'songError'" transition="head">Server error, Backtrack loaded only {{loadingSongsIndex}}/{{histoBound - 1}} songs</span>
-            <span v-show="currentHeader === 'playerLoading'" transition="head">Loading the music player..</span>
-        </h1>
+            <span v-show="currentHeader === 'songLoading'" transition="head">
+            {{locale === 'fr' ? 'Chargement de l\'historique d\'écoute..' : 'Fetching your music listening history..'}}
+            </span>
+            <span v-show="currentHeader === 'songError'" transition="head">
+            {{locale === 'fr' ? ('Erreur serveur, Backtrack n\'a chargé que ' + loadingSongsIndex + '/' + histoBound - 1 + ' chansons') :
+            ('Server error, Backtrack loaded only ' + loadingSongsIndex + '/' + histoBound - 1 + ' songs')}}
+            </span>
+            <span v-show="currentHeader === 'eventLoading'" transition="head">
+            {{locale === 'fr' ? 'Analyse des événements..' : 'Processing events..'}}
+            </span>
+            <span v-show="currentHeader === 'playerLoading'" transition="head">
+            {{locale === 'fr' ? 'Chargement du lecteur musical..' : 'Loading the music player..'}}
+            </span>
+            <span class="clearer"></span>
+        </div>
         <div class="loading-bar-wrapper" v-show="currentHeader === 'songLoading'" transition="opac">
             <div class="loading-bar-back" v-bind:style="{backgroundColor: bckCol}">
                 <div class="loading-bar-front" v-bind:style="{width: loadWidth + '%'}"></div>
@@ -21,26 +38,35 @@
             <div class="loading-bar-text">{{loadingSongsIndex}} / {{histoBound - 1}}</div>
         </div>
         <div class="header-bt-wrapper bt-start" v-show="currentHeader === 'welcome'" transition="opac">
-            <button type="button" class="bt-violet" name="button" v-on:click="startConnect()">
-                Login<br>
-                <em>using Deezer</em>
+            <button type="button" class="bt-violet" name="button" v-on:click="startConnect()" v-if="!fullyLoaded">
+                {{locale === 'fr' ? 'Connexion' : 'Login'}}<br>
+                <em>{{locale === 'fr' ? 'avec' : 'using'}} Deezer</em>
             </button>
-            <button type="button" class="bt-brown" name="button" v-on:click="logout(this.$router)">
-                Check<br>
-                <em>an example</em>
+            <button type="button" class="bt-violet" name="button" v-on:click="goPlay()" v-if="fullyLoaded">
+                {{locale === 'fr' ? 'Retour à' : 'Back to'}}<br>
+                {{locale === 'fr' ? 'l\'appli' : 'the app'}}
             </button>
+            <button type="button" class="bt-brown lh2" name="button" v-on:click="logout()" v-if="fullyLoaded">
+                {{locale === 'fr' ? 'Déconnexion' : 'Log-out'}}
+            </button>
+            <button type="button" class="bt-brown lh2" name="button" v-on:click="setCurrentModal('about')">
+                {{locale === 'fr' ? 'A propos' : 'About'}}
+            </button>
+            <!-- <button type="button" class="bt-brown lh2" name="button" v-on:click="setCurrentModal('share')">
+                {{locale === 'fr' ? 'Partager' : 'Share'}}
+            </button> -->
         </div>
         <div class="header-bt-wrapper bt-error" v-show="currentHeader === 'songError' || currentHeader === 'connectError'" transition="opac">
-            <button type="button" class="bt-violet" name="button" v-on:click="tryAgain()">
-                Try again
+            <button type="button" class="bt-violet lh2" name="button" v-on:click="startConnect()">
+                {{locale === 'fr' ? 'Réessayer' : 'Try again'}}
             </button>
-            <button v-show="currentHeader === 'songError'" type="button" class="bt-brown" name="button" v-on:click="loadPlayer()">
-                Continue
+            <button v-show="currentHeader === 'songError'" type="button" class="bt-brown lh2" name="button" v-on:click="continueLoad()">
+                {{locale === 'fr' ? 'Continuer' : 'Continue'}}
             </button>
         </div>
-        <div class="header-about-wrap">
+        <!-- <div class="header-about-wrap">
             <a v-on:click="setCurrentModal('about')">About</a>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -48,17 +74,19 @@
 import applogo from './applogo.vue'
 import {logout, login, initApp, initPlayer, getHistoBound, getAllSongs, resetSongs} from '../vuex/dz_actions'
 import {setAppLoading, setCurrentModal} from '../vuex/ui_actions'
+import {generateDateTags, generateEvents} from '../vuex/genevents_actions.js'
 import Cosmos from './cosmos/cosmosRendering.js'
 
 export default {
     components: {'app-logo': applogo},
     vuex: {
-        actions: {setAppLoading, logout, login, initApp, initPlayer, getHistoBound, getAllSongs, resetSongs, setCurrentModal},
+        actions: {setAppLoading, logout, login, initApp, initPlayer, generateDateTags, generateEvents, getHistoBound, getAllSongs, resetSongs, setCurrentModal},
         getters: {
             // Init app :
             auth: state => state.auth,
             isInitApp: state => state.isInitApp,
             isInitPlayer: state => state.isInitPlayer,
+            locale: state => state.locale,
             // Songs loading :
             loadingSongsIndex: state => state.loadingSongsIndex,
             histoBound: state => state.histoBound,
@@ -76,11 +104,14 @@ export default {
     computed: {
         loadWidth: function () {
             return Math.min(100, Math.round(100 * this.loadingSongsIndex / Math.max((this.histoBound - 1), 1)))
+        },
+        fullyLoaded: function () {
+            return this.isInitApp && this.isInitPlayer && this.auth && this.loadingSongsIndex > 0
         }
     },
     methods: {
         initCosmos: function () {
-            this.myCosmos.init(3000, false, 70)
+            this.myCosmos.init(3000, false, 60)
             this.myCosmos.isAnim = true
             this.myCosmos.moveParticles(-3000)
         },
@@ -88,19 +119,23 @@ export default {
             this.currentHeader = 'authLoading'
             this.setAppLoading(true)
             if (this.isInitApp) {
-                this.login().then((response) => {
-                    this.loadHistoBound(response.name)
-                }).catch(error => {
-                    this.setAppLoading(false)
-                    this.currentHeader = 'connectError'
-                    this.connectErrorMessage = error.message
+                this.resetSongs().then(() => {
+                    this.login().then((response) => {
+                        this.loadHistoBound(response.name)
+                    }).catch(error => {
+                        this.setAppLoading(false)
+                        this.currentHeader = 'connectError'
+                        this.connectErrorMessage = error.message[this.locale === 'fr' ? 'fr' : 'en']
+                    })
                 })
             } else {
                 this.initApp().then(this.startConnect)
             }
         },
-        tryAgain: function () {
-            this.resetSongs().then(() => this.startConnect())
+        continueLoad: function () {
+            if (this.currentHeader === 'songError') {
+                this.loadEvents()
+            }
         },
         loadHistoBound: function (name) {
             this.currentHeader = 'helloX'
@@ -111,18 +146,27 @@ export default {
             }).catch(error => {
                 this.setAppLoading(false)
                 this.currentHeader = 'connectError'
-                this.connectErrorMessage = error.message
+                this.connectErrorMessage = error.message[this.locale === 'fr' ? 'fr' : 'en']
             })
         },
         loadSongs: function () {
             this.currentHeader = 'songLoading'
             this.setAppLoading(true)
             this.getAllSongs().then(() => {
-                this.loadPlayer()
+                this.loadEvents()
             }).catch(error => {
                 console.log(error)
                 this.setAppLoading(false)
                 this.currentHeader = 'songError'
+            })
+        },
+        loadEvents: function () {
+            this.currentHeader = 'eventLoading'
+            this.setAppLoading(true)
+            this.generateEvents().then(() => {
+                this.generateDateTags().then(() => {
+                    this.loadPlayer()
+                })
             })
         },
         loadPlayer: function () {
@@ -167,29 +211,29 @@ export default {
 
     /*HEADER TEXT*/
     .header-message {
-        position: relative;
         font-family: 'Raleway', 'Helvetica', sans-serif;
-        font-size: 3em;
-        margin-top:80px;
-        width: 100%;
+        font-size: 3em; text-align: center;
+        margin-top: 80px;
         color: white;
     }
+    .clearer {clear: both;}
 
     /*BUTTONS*/
     .header-bt-wrapper {
         position: relative;
         width:100%; text-align: center;
-        top: 100px;
+        margin-top: 80px;
     }
     .header-bt-wrapper button {
-        margin: 50px; padding:10px; font-size: 1.1em;
-        cursor: pointer;
+        margin: 10px 50px; padding:10px; font-size: 1.1em;
+        cursor: pointer; display: inline-block; vertical-align: middle;
         font-family: 'Roboto', 'Helvetica', sans-serif;
         border-radius: 5px; border: none;
     }
     .bt-violet {background-color: #A493C6;}
     .bt-brown {background-color: #E0E3DA;}
     .header-bt-wrapper em {font-style: normal; font-size:0.9em; opacity: 0.6;}
+    /*.lh2 {line-height: 2em;}*/
 
     /*LOADING BAR*/
     .loading-bar-wrapper {
@@ -230,11 +274,11 @@ export default {
 
     /*TRANSITIONS*/
     .head-transition {
-        width: 100%; position: absolute;
-        text-align: center; transform: translateY(0px);
+        width: 100%;
+        text-align: center;
         opacity: 1; transition: all 0.4s ease-out;
     }
-    .head-enter, .head-leave {opacity: 0;}
+    .head-enter, .head-leave {opacity: 0; position: absolute; left: 0;}
     .head-enter {transform: translateY(20px);}
     .head-leave {transform: translateY(-40px);}
     .opac-transition {

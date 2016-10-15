@@ -266,6 +266,7 @@
 
 <script type="text/javascript">
 import {clickCard} from '../../vuex/ui_actions.js'
+import {getIntervalSongs} from '../../vuex/algo_actions.js'
 
 export default {
     replace: true,
@@ -274,7 +275,7 @@ export default {
         getters: {
             locale: state => state.locale
         },
-        actions: {clickCard}
+        actions: {clickCard, getIntervalSongs}
     },
     created: function () {
         let r = parseInt(210 + Math.random() * 30, 10)
@@ -297,7 +298,7 @@ export default {
 
 .dc-wrapper {
     width: 25%; display: inline-block;
-    height: 300px; position: relative;
+    height: 300px; position: relative; max-height: 100%;
 }
 .dc-card {
     position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px;

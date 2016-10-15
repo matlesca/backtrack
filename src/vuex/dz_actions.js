@@ -4,9 +4,13 @@ import moment from 'moment'
 // DEEZER INIT :
 export function initApp ({dispatch}, http) {
     return new Promise(function (resolve, reject) {
+        // DZ.init({
+        //     appId: '172545',
+        //     channelUrl: 'http://localhost:8080/index.html'
+        // })
         DZ.init({
-            appId: '172545',
-            channelUrl: 'http://localhost:8080/index.html'
+            appId: '191362',
+            channelUrl: 'https://matlesca.github.io/backtrack/index.html'
         })
         var r = Math.round(40 + Math.round(Math.random()) * 40 + Math.random() * 40)
         var g = Math.round(40 + Math.round(Math.random()) * 40 + Math.random() * 40)
@@ -75,7 +79,7 @@ export function login ({dispatch}) {
             } else {
                 dispatch('SET_AUTH', {})
                 dispatch('SET_ALLOWFULLSONGS', false)
-                reject({type: 'auth', message: 'Couldn\'t connect, please try to log-in again'})
+                reject({type: 'auth', message: {'en': 'Couldn\'t connect, please try to log-in again', 'fr': 'Erreur de connexion à votre compte'}})
             }
         }, {perms: 'basic_access, listening_history'})
     })
@@ -84,10 +88,7 @@ export function logout ({dispatch}) {
     return new Promise(function (resolve, reject) {
         DZ.logout(() => {
             dispatch('SET_AUTH', {})
-            if (DZ.player) {
-                DZ.player.pause()
-                dispatch('SET_PLAYING', false)
-            }
+            resetSongs({dispatch})
             resolve()
         })
     })
@@ -194,18 +195,18 @@ function loopBounds (dispatch, state, resolve, reject) {
             if (state.histoBound > 100) {
                 resolve(result.data)
             } else {
-                reject({type: 'histo', message: 'Your listening history is too short, try again in a few days !'})
+                reject({type: 'histo', message: {'en': 'Your listening history is too short, try again in a few days !', 'fr': 'Pas assez d\'historique d\'écoute, réessaye dans quelques jours !'}})
             }
         }
     }).catch(error => {
         if (error.code === 200) {
             // Not enough permissions
-            reject({type: 'perm', message: 'Permission error, please try to log-in again'})
+            reject({type: 'perm', message: {'en': 'Permission error, please try to log-in again', 'fr': 'Autorisations insuffisantes, réessayer svp'}})
         } else if (error.code === 800) {
             // No data found, try with a lower bound
             dispatch('INC_TIMESFAILED')
             if (state.timesFailed > 10) {
-                reject({type: 'histo', message: 'Your listening history is too short, try again in a few days !'})
+                reject({type: 'histo', message: {'en': 'Your listening history is too short, try again in a few days !', 'fr': 'Pas assez d\'historique d\'écoute, réessaye dans quelques jours !'}})
             } else {
                 if (state.lastHistoBound > state.histoBound) {
                     delta = state.lastHistoBound - state.histoBound
@@ -219,7 +220,7 @@ function loopBounds (dispatch, state, resolve, reject) {
         } else {
             // API calls quota exceeded or other error.. try again a few times
             if (state.timesFailed > 10) {
-                reject({type: 'server', message: 'No answer from server, please try again later'})
+                reject({type: 'server', message: {'en': 'No answer from server, please try again later', 'fr': 'Pas de réponse du serveur, réessayer plus tard svp'}})
             } else {
                 dispatch('INC_TIMESFAILED')
                 setTimeout(() => {

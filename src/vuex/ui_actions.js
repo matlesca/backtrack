@@ -1,3 +1,4 @@
+
 /*global DZ*/
 import {updateSongsFromDate} from './algo_actions'
 
@@ -30,18 +31,16 @@ export function setGroupBy ({dispatch}, group) {
     dispatch('SET_GROUPBY', group)
 }
 
-export function initState ({dispatch}) {
+export function pauseState ({state, dispatch}) {
     return new Promise(function (resolve, reject) {
         dispatch('SET_SHOWNAV', false)
         dispatch('SET_MOVING', false)
         dispatch('SET_APPLOADING', false)
         dispatch('SET_EVENTLOADING', false)
         dispatch('SET_CURRENTMODAL', false)
-        dispatch('SET_CURRENTEVENT', {})
-        dispatch('SET_PLAYING', false)
         dispatch('SET_CURRENTSONGID', 0)
-        if (DZ.player) {
-            DZ.player.playTracks(DZ.player.getTrackList()[0])
+        if (state.playing) {
+            dispatch('SET_PLAYING', false)
             DZ.player.pause()
         }
         resolve()
@@ -51,11 +50,7 @@ export function initState ({dispatch}) {
 export function clickCard ({dispatch, state}, obj) {
     if (!state.moving) {
         dispatch('SET_MOVING', true)
-        if (obj.tags) {
-            dispatch('SET_CURRENTEVENT', obj)
-        } else {
-            dispatch('SET_CURRENTEVENT', {})
-        }
+        dispatch('SET_CURRENTEVENT', obj)
         dispatch('SET_CURRENTDATE', obj.start || obj.date)
         dispatch('SET_CURRENTMODAL', false)
         if (state.playing) {
@@ -65,11 +60,7 @@ export function clickCard ({dispatch, state}, obj) {
         setTimeout(() => {
             dispatch('RESET_CURRENTSONGS')
             dispatch('SET_SONGSDATALOADING', true)
-            updateSongsFromDate({dispatch, state}, obj.start || obj.date, obj.end || obj.date, obj.gap || 3).then(() => dispatch('SET_SONGSDATALOADING', false))
+            updateSongsFromDate({dispatch, state}, obj.start || obj.date, obj.end || obj.date, obj.type === 'news' ? 3 : 0).then(() => dispatch('SET_SONGSDATALOADING', false))
         }, 500)
     }
-}
-
-export function chooseDate ({dispatch, state}, event) {
-
 }

@@ -5,13 +5,8 @@ import part2 from '../../img/starPart2.png'
 import part3 from '../../img/starPart3.png'
 import part4 from '../../img/starPart4.png'
 import part5 from '../../img/starPart5.png'
-// import textureFlare0 from '../../img/lensflare0.png'
-// import textureFlare1 from '../../img/lensflare1.png'
-// import textureFlare2 from '../../img/lensflare2.png'
 
 export default function (index, nSys, totalDepth, nPartSys) {
-    // var that = this
-    // that.lensFlareTab = []
     function chooseImg (imgIndex) {
         var imgPart
         if (imgIndex > 4) {
@@ -70,7 +65,6 @@ export default function (index, nSys, totalDepth, nPartSys) {
             colors[i3 + 0] = 1 - Math.floor(Math.random() * 30) / 100
             colors[i3 + 1] = 1 - Math.floor(Math.random() * 30) / 100
             colors[i3 + 2] = 1 - Math.floor(Math.random() * 30) / 100
-            // that.lensFlareTab.push(addLensFlare(positions[i3 + 0], positions[i3 + 1], positions[i3 + 2], sizes[i] * 2))
         }
         geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3))
 		geometry.addAttribute('customColor', new THREE.BufferAttribute(colors, 3))
@@ -78,16 +72,6 @@ export default function (index, nSys, totalDepth, nPartSys) {
 		geometry.addAttribute('size', new THREE.BufferAttribute(sizes, 1))
         return geometry
     }
-    // function addLensFlare (x, y, z, size) {
-    //     var lensFlare = new THREE.LensFlare('', 100, 0, THREE.AdditiveBlending, new THREE.Color(0xffffff))
-    //     // we're going to be using multiple sub-lens-flare artifacts, each with a different size
-    //     lensFlare.add(textureFlare0, 512, 0.0, THREE.AdditiveBlending)
-    //     lensFlare.add(textureFlare1, 512, 0.0, THREE.AdditiveBlending)
-    //     lensFlare.add(textureFlare2, 512, 0.0, THREE.AdditiveBlending)
-    //     lensFlare.positionScreen = new THREE.Vector3(x, y, z)
-    //     lensFlare.size = size
-    //     return lensFlare
-    // }
     var uniforms = {
         color: {type: 'c', value: new THREE.Color(0xffffff)},
         texture: {type: 't', value: new THREE.TextureLoader().load(chooseImg(index))}

@@ -4,9 +4,6 @@ import part1 from '../../img/cloud0.png'
 import part2 from '../../img/cloud1.png'
 import part3 from '../../img/cloud2.png'
 import part4 from '../../img/cloud3.png'
-// import textureFlare0 from '../../img/lensflare0.png'
-// import textureFlare1 from '../../img/lensflare1.png'
-// import textureFlare2 from '../../img/lensflare2.png'
 
 export default function (myScene, index, nSys, totalDepth, nPartSys) {
     function chooseImg (imgIndex) {
@@ -81,7 +78,6 @@ export default function (myScene, index, nSys, totalDepth, nPartSys) {
             colors[i3 + 0] = col.r
             colors[i3 + 1] = col.g
             colors[i3 + 2] = col.b
-            // that.lensFlareTab.push(addLensFlare(positions[i3 + 0], positions[i3 + 1], positions[i3 + 2], sizes[i] * 2))
         }
         geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3))
 		geometry.addAttribute('customColor', new THREE.BufferAttribute(colors, 3))

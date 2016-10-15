@@ -42,11 +42,11 @@
             </button>
             <input class="slider-volume" type="range" min="0" max="100" v-model="volumePos">
         </div>
-        <div class="group-buttons-label player-transp">Group by :</div>
+        <div class="group-buttons-label player-transp">{{locale === 'fr' ? 'Grouper par :' : 'Group by :'}}</div>
         <div class="group-buttons-wrapper">
-            <a class="group-button player-transp" v-on:click="setGroupBy('track')" v-bind:class="{'selected': groupBy === 'track'}">Track</a>
+            <a class="group-button player-transp" v-on:click="setGroupBy('track')" v-bind:class="{'selected': groupBy === 'track'}">{{locale === 'fr' ? 'Titre' : 'Track'}}</a>
             <a class="group-button player-transp" v-on:click="setGroupBy('album')" v-bind:class="{'selected': groupBy === 'album'}">Album</a>
-            <a class="group-button player-transp" v-on:click="setGroupBy('artist')" v-bind:class="{'selected': groupBy === 'artist'}">Artist</a>
+            <a class="group-button player-transp" v-on:click="setGroupBy('artist')" v-bind:class="{'selected': groupBy === 'artist'}">{{locale === 'fr' ? 'Artiste' : 'Artist'}}</a>
         </div>
     </div>
 </template>
@@ -62,7 +62,9 @@ export default {
         getters: {
             playing: state => state.playing,
             groupBy: state => state.groupBy,
-            showSongsTab: state => state.showSongsTab
+            showSongsTab: state => state.showSongsTab,
+            currentModal: state => state.currentModal,
+            locale: state => state.locale
         },
         actions: {togglePlayerPlay, playerNext, playerPrevious, playerVolume, setShowSongsTab, setGroupBy}
     },
@@ -81,7 +83,7 @@ export default {
             }
         },
         pressSpace: function (ev) {
-            if (ev.keyCode === 32) {
+            if (ev.keyCode === 32 && (!this.currentModal || this.currentModal === '')) {
                 this.togglePlayerPlay()
             }
         }

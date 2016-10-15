@@ -3,9 +3,6 @@
         <div class="month-label" v-for="label in monthLabels" v-bind:id="label.elemId">
             {{label.text}}
         </div>
-        <div v-bind:id="startTooltip.elemId">
-            {{startTooltip.text}}
-        </div>
     </div>
 </template>
 
@@ -26,16 +23,6 @@ export default {
         cosmos: function () {
             if (!this.loaded && this.cosmos) {
                 this.cosmos.addLabels(this.monthLabels)
-                if (this.locale === 'fr') {
-                    this.startTooltip.text = 'Choisit un événement ou une date et découvre tes écoutes musicales de l\'époque !'
-                    this.startTooltip.xpos = -110
-                    this.startTooltip.ypos = 360
-                } else {
-                    this.startTooltip.text = 'Choose an event or a date, and discover your musical favorites at that time !'
-                    this.startTooltip.xpos = -60
-                    this.startTooltip.ypos = 360
-                }
-                this.cosmos.addLabels([this.startTooltip])
                 this.loaded = true
             }
         }
@@ -69,7 +56,6 @@ export default {
     },
     data () {
         return {
-            startTooltip: {'elemId': 'start-tooltip', 'xpos': -300, 'ypos': 300, 'zpos': 500, 'text': ''},
             loaded: false
         }
     }
@@ -84,12 +70,6 @@ export default {
     color: #A493C6;
     opacity: 0;
     text-transform: capitalize;
-    font-family: 'Raleway', 'Helvetica', sans-serif;
-}
-#start-tooltip {
-    font-size: 30px;
-    color: #ffffff;
-    opacity: 1;
     font-family: 'Raleway', 'Helvetica', sans-serif;
 }
 

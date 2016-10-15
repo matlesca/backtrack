@@ -1,8 +1,7 @@
 <template>
     <div class="modal-inner evsmodal">
         <div class="modal-title">
-            <span v-if="locale === 'fr'" class="modal-title-title">Choisis une période</span>
-            <span v-if="locale !== 'fr'" class="modal-title-title">Choose period</span>
+            <span class="modal-title-title">{{locale === 'fr' ? 'Choisis une période' : 'Choose period'}}</span>
             <div class="modal-search">
                 <svg class="search-logo" viewBox="0 0 66.616 66.613">
                 <path d="M0,20.851c0,11.516,9.336,20.852,20.852,20.852c4.313,0,8.318-1.311,11.644-3.553l27.291,27.291
@@ -25,33 +24,34 @@
 import moment from 'moment'
 import lunr from 'lunr'
 import dateCard from './dateCard.vue'
-import generateDateTags from './generateDateTags.js'
-import {getIntervalSongs} from '../../vuex/algo_actions.js'
 
 export default {
     replace: true,
     components: {'date-card': dateCard},
     vuex: {
-        actions: {generateDateTags, getIntervalSongs},
         getters: {
             locale: state => state.locale,
-            dateBounds: state => state.dateBounds
+            dateBounds: state => state.dateBounds,
+            dateCards: state => state.dateCards,
+            currentEvent: state => state.currentEvent
         }
     },
     computed: {
         displayCards: function () {
             let retTab = []
-            if (this.allCards.length) {
+            if (this.dateCards.length) {
                 if (this.searchInput === '') {
-                    retTab = this.allCards.filter(card => card.featured).sort(() => Math.random())
+                    retTab = this.dateCards.filter(card => card.featured && card !== this.currentEvent).sort(() => Math.random())
                 } else {
                     let res = this.lunrIndex.search(this.searchInput)
-                    this.allCards.forEach(card => {
-                        res.forEach(fEv => {
-                            if (fEv.ref === card.id) {
-                                retTab.push(card)
-                            }
-                        })
+                    this.dateCards.forEach(card => {
+                        if (card !== this.currentEvent) {
+                            res.forEach(fEv => {
+                                if (fEv.ref === card.id) {
+                                    retTab.push(card)
+                                }
+                            })
+                        }
                     })
                     retTab.sort((a, b) => {
                         if (a.rank === b.rank) {
@@ -62,12 +62,7 @@ export default {
                     })
                 }
             }
-            if (retTab.length > 20) {
-                return retTab
-            } else {
-                return retTab
-                // retTab.filter(dc => this.getIntervalSongs(dc.start, dc.end, 12).length > 10)
-            }
+            return retTab
         }
     },
     created: function () {
@@ -77,13 +72,11 @@ export default {
             this.field('specialDay')
             this.field('lookFor')
         })
-        this.allCards = this.generateDateTags()
-        this.allCards.forEach(card => this.lunrIndex.add(card))
+        this.dateCards.forEach(card => this.lunrIndex.add(card))
     },
     data () {
         return {
             searchInput: '',
-            allCards: [],
             lunrIndex: {}
         }
     }

@@ -2,80 +2,60 @@
     {
         "id": "terroparis131115",
         "title": {"en": "Terrorist attacks in Paris", "fr": "Attaques terroristes à Paris"},
-        "type": "article",
+        "type": "news",
         "tags": [{"en": "society", "fr": "société"}, {"en": "france", "fr": "france"}, {"en": "terrorism", "fr": "terrorisme"}],
         "date": "2015-11-13",
-        "panels": [
-            {"type": "text", "text": {
-                "en": "At 9pm several armed men arrived at Bataclan and attacked the participants at a concert by th rock band Eagles of Death metal.",
-                "fr": "A 21h des hommes armés ont pris d'assaut le Bataclan, faisant plus de 100 morts."
-            }},
-            {"type": "image", "src": "http://i.f1g.fr/media/figaro/805x453_crop/2015/11/20/XVM2fab5dca-8fbd-11e5-8af4-dde313013ee9.jpg"},
-            {"type": "image", "src": "http://france3-regions.francetvinfo.fr/paris-ile-de-france/sites/regions_france3/files/styles/top_big/public/assets/images/2016/01/02/000_arp4068395_1.jpg?itok=y5dw7PCA"}
+        "images": [
+            "http://i.f1g.fr/media/figaro/805x453_crop/2015/11/20/XVM2fab5dca-8fbd-11e5-8af4-dde313013ee9.jpg",
+            "http://france3-regions.francetvinfo.fr/paris-ile-de-france/sites/regions_france3/files/styles/top_big/public/assets/images/2016/01/02/000_arp4068395_1.jpg?itok=y5dw7PCA"
         ]
     },
     {
         "id": "macronlaw261015",
         "title": {"en": "Emmanuel Macron presents its law project for economy in France",
             "fr": "Emmanuel Macron présente son projet de loi pour l'économie."},
-        "type": "article",
+        "type": "news",
         "tags": [{"en": "politics", "fr": "politique"}, {"en": "france", "fr": "france"}, {"en": "economy", "fr": "économie"}],
         "date": "2015-10-26",
-        "panels": [
-            {"type": "text", "text": {
-                "en": "The French minister of economy unveiled a series of measures to improve the employment situation in the country.",
-                "fr": "Le ministre de l'économie a présenté une série de mesures visant à améliorer la situation de l'emploi en France."
-            }},
-            {"type": "image", "src": "http://www.lesinrocks.com/wp-content/thumbnails/uploads/2014/09/604elysee-palace-in-paris-september-9-2014-reuterspatrick-kovarik-tt-width-604-height-431-crop-0-bgcolor-000000-nozoom_default-1-lazyload-0.jpg"},
-            {"type": "image", "src": "http://www.entreprises.ouest-france.fr/sites/default/files/imagecache/detail-article/2012/07/10/20667_8432.jpg"},
-            {"type": "image", "src": "http://referentiel.nouvelobs.com/file/4614655-la-france-va-vers-un-record-de-chomage-en-2013-selon-l-ofce.jpg"}
+        "images": [
+            "http://www.lesinrocks.com/wp-content/thumbnails/uploads/2014/09/604elysee-palace-in-paris-september-9-2014-reuterspatrick-kovarik-tt-width-604-height-431-crop-0-bgcolor-000000-nozoom_default-1-lazyload-0.jpg",
+            "http://www.entreprises.ouest-france.fr/sites/default/files/imagecache/detail-article/2012/07/10/20667_8432.jpg",
+            "http://referentiel.nouvelobs.com/file/4614655-la-france-va-vers-un-record-de-chomage-en-2013-selon-l-ofce.jpg"
         ]
     },
     {
         "id": "smashiha100616",
         "title": {"en": "Smashing Pumpkins reunited with James Iha", "fr": "James Iha réintègre les Smashing Pumpkins"},
-        "type": "article",
+        "type": "news",
         "tags": [{"en": "culture", "fr": "culture"}, {"en": "music", "fr": "musique"}],
-        "date": "2016-10-18",
-        "panels": [
-            {"type": "text", "text": {
-                "en":"The famous rock band offically announced its reunion this saturday. A come-back concert tour is expected this summer.",
-                "fr": "Le groupe de rock a annoncé sa reformation ce samedi. Une tournée est prévue cet été."
-            }},
-            {"type": "image", "src": "http://kilscene.com/wp-content/uploads/2014/02/Smashing_Group.jpg"},
-            {"type": "image", "src": "https://spfreaks.files.wordpress.com/2013/07/ji01.jpg"}
+        "date": "2015-10-18",
+        "images": [
+            "http://kilscene.com/wp-content/uploads/2014/02/Smashing_Group.jpg",
+            "https://spfreaks.files.wordpress.com/2013/07/ji01.jpg"
         ]
     },
     {
         "id": "federer22012016",
         "title": {"en": "Federer reached the threshold of 300 Grand Slam success and go and go and go and go", "fr": "Federer atteint la barre des 300 succès en Grand Chelem"},
-        "type": "article",
+        "type": "news",
         "tags": [{"en": "sport", "fr": "sport"}, {"en": "tennis", "fr": "tennis"}, {"en": "australia", "fr": "australie"}, {"en": "australiaaa", "fr": "australie"}, {"en": "australia", "fr": "australie"}, {"en": "australia", "fr": "australie"}, {"en": "australia", "fr": "australie"}],
-        "date": "2015-01-05",
-        "panels": [
-            {"type": "text", "text": {
-                "en":"Roger Federer won its 300th victory in a Grand Slam tournament. He dominated the Bulgarian Grigor Dimitrov, and managed to qualify for the 8th finals of the Australian Open, where he will face Belgium's David Goffin.",
-                "fr": "Roger Federer a atteint la barre des 300 victoires en Grand Chelem! Le Bâlois, qui a dominé le Bulgare Grigor Dimitrov, s'est du même coup qualifié pour les 8es de finale de l'Open d'Australie où il affrontera le Belge David Goffin."
-            }},
-            {"type": "image", "src": "https://www.rts.ch/2016/01/22/09/33/7434683.image?w=960&h=540"},
-            {"type": "image", "src": "http://www.tennislegend.fr/wp-content/uploads/Verdasco-Nadal-Open-Australie-2016-Highlights-Best-points.jpg"},
-            {"type": "image", "src": "http://travelinnate.com/wp-content/uploads/2014/04/Sydney-Opera-House-11.jpg"}
+        "date": "2015-03-10",
+        "images": [
+            "https://www.rts.ch/2016/01/22/09/33/7434683.image?w=960&h=540",
+            "http://www.tennislegend.fr/wp-content/uploads/Verdasco-Nadal-Open-Australie-2016-Highlights-Best-points.jpg",
+            "http://travelinnate.com/wp-content/uploads/2014/04/Sydney-Opera-House-11.jpg"
         ]
     },
     {
-        "id": "auroras",
+        "id": "auroras20160613",
         "title": {"en": "First auroras of the season in Island", "fr": "Premières aurores boréales de la saison en Islande"},
-        "type": "article",
+        "type": "news",
         "tags": [{"en": "nature", "fr": "nature"}, {"en": "island", "fr": "islande"}],
         "date": "2016-06-13",
-        "panels": [
-            {"type": "text", "text": {
-                "en":"AURORAS",
-                "fr": "Aurores"
-            }},
-            {"type": "image", "src": "http://www.northernlightscentre.ca/images/northernlights.jpg"},
-            {"type": "image", "src": "http://i.telegraph.co.uk/multimedia/archive/03590/northern-lights-se_3590060k.jpg"},
-            {"type": "image", "src": "http://www.fodors.com/ee/files/slideshows/3-Finland-Northern-Lights.jpg"}
+        "images": [
+            "http://www.northernlightscentre.ca/images/northernlights.jpg",
+            "http://i.telegraph.co.uk/multimedia/archive/03590/northern-lights-se_3590060k.jpg",
+            "http://www.fodors.com/ee/files/slideshows/3-Finland-Northern-Lights.jpg"
         ]
     }
 ]

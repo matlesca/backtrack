@@ -4,15 +4,15 @@ import {getAPISongInfo} from './dz_actions'
 export function updateSongsFromDate ({dispatch, state}, start, end, gap) {
     return new Promise(function (resolve, reject) {
         let intervalSongs = getIntervalSongs({state}, start, end, gap)
-        if (intervalSongs.length < 10) {
+        if (intervalSongs.length < 10 && gap > 0) {
             // If less than 10 songs try with a larger date interval
-            intervalSongs = getIntervalSongs({state}, start, end, 6)
+            intervalSongs = getIntervalSongs({state}, start, end, gap * 2)
             if (intervalSongs.length < 10) {
                 // If less than 10 songs try with a larger date interval
-                intervalSongs = getIntervalSongs({state}, start, end, 12)
+                intervalSongs = getIntervalSongs({state}, start, end, gap * 4)
             }
         }
-        if (intervalSongs.length >= 10) {
+        if (intervalSongs.length > 0) {
             addCurrentSongsData(dispatch, state, resolve, reject, intervalSongs)
         } else {
             reject({message: 'Not enough listening history at this date'})

@@ -47,7 +47,7 @@ export default function (elemQuery, bckCol, randKey) {
         }
         that.particleSystems = makeParticles(depth, nPart, 5)
         that.particleSystems.forEach(sys => that.scene.add(sys))
-        that.cloudSystems = makeClouds(depth, Math.round(nPart * 1.5), 4)
+        that.cloudSystems = makeClouds(depth, Math.round(nPart * 1.7), 4)
         that.cloudSystems.forEach(sys => that.scene.add(sys))
         update()
     }
@@ -212,7 +212,7 @@ export default function (elemQuery, bckCol, randKey) {
             that.grid.element.classList.remove('visible')
             TWEEN.remove(that.moveTween)
             that.moveTween = new TWEEN.Tween(that.camera.position, {override: true})
-                .to({z: zpos - 520}, duration).easing(TWEEN.Easing.Cubic.InOut)
+                .to({z: zpos - 500}, duration).easing(TWEEN.Easing.Cubic.InOut)
                 .onUpdate(function () {
                     updateLabelsOpacity()
                 }).onComplete(function () {
