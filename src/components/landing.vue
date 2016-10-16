@@ -7,7 +7,7 @@
         </div>
         <div class="header-message">
             <span v-show="currentHeader === 'welcome'" transition="head">
-            {{locale === 'fr' ? 'Redécouvre ton historique d\'écoute musical' : 'Find out what you listened to in the past'}}
+            {{locale === 'fr' ? 'Redécouvre ton historique d\'écoute musical' : 'Rediscover your music listening history'}}
             </span>
             <span v-show="currentHeader === 'authLoading'" transition="head">
             {{locale === 'fr' ? 'Connexion en cours..' : 'Fetching your account information..'}}
@@ -46,15 +46,12 @@
                 {{locale === 'fr' ? 'Retour à' : 'Back to'}}<br>
                 {{locale === 'fr' ? 'l\'appli' : 'the app'}}
             </button>
-            <button type="button" class="bt-brown lh2" name="button" v-on:click="logout()" v-if="fullyLoaded">
-                {{locale === 'fr' ? 'Déconnexion' : 'Log-out'}}
-            </button>
             <button type="button" class="bt-brown lh2" name="button" v-on:click="setCurrentModal('about')">
                 {{locale === 'fr' ? 'A propos' : 'About'}}
             </button>
-            <!-- <button type="button" class="bt-brown lh2" name="button" v-on:click="setCurrentModal('share')">
-                {{locale === 'fr' ? 'Partager' : 'Share'}}
-            </button> -->
+            <button type="button" class="bt-brown lh2" name="button" v-on:click="logout()" v-if="fullyLoaded">
+                {{locale === 'fr' ? 'Déconnexion' : 'Log-out'}}
+            </button>
         </div>
         <div class="header-bt-wrapper bt-error" v-show="currentHeader === 'songError' || currentHeader === 'connectError'" transition="opac">
             <button type="button" class="bt-violet lh2" name="button" v-on:click="startConnect()">

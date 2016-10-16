@@ -135,14 +135,14 @@ export default {
 
 /*Slider design*/
 .player-wrapper input[type='range'] {
-    -webkit-appearance: none !important;
+    appearance: none !important;
     opacity: 0.7;
     position: absolute; left: 55px; bottom: 10px;
     width: 58%; height:2px;
     background: #FEFCEA; border: none;
 }
-.player-wrapper input[type='range']::-webkit-slider-thumb {
-    -webkit-appearance: none !important;
+.player-wrapper input[type='range']::slider-thumb {
+    appearance: none !important;
     border-radius: 50%;
     background: #FEFCEA;
     height:10px;

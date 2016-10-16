@@ -109,7 +109,6 @@ export default {
         margin: 20px 30px; border-radius: 10px;
         background-color: rgba(100, 100, 110, 0.5);
         font-size: 0.95em; opacity: 0.9; color: #A493C6;
-        /*color: #748C93;*/
     }
     .about-under .about-under-title {
         color: #A493C6;

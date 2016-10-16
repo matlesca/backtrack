@@ -110,85 +110,85 @@ export function drawShare ({state}, wrapperSelector, canvasSelector) {
         }
     })
     // When all stars are drawn, draw text..
-    Promise.all(starProms).then(() => {
-        // Define title and subtitle :
-        let title = 'Le 13 juin 2016..'
-        let subtitle = 'Federer reached the threshold of 300 Grand Slam success and go and go and go and go'
-        title = false
-        subtitle = ''
-        if (!title) {
-            if (state.currentEvent.type === 'news') {
-                title = (state.locale === 'fr' ? 'Le ' : 'On ') + moment(state.currentEvent.date).format('LL')
-                subtitle = state.currentEvent.title[state.locale === 'fr' ? 'fr' : 'en']
-            } else {
-                if (state.currentEvent.specialDay) {
-                    title = (state.locale === 'fr' ? 'Le ' : 'On ') + moment(state.currentEvent.start).format('LL')
-                    subtitle = state.currentEvent.specialDay
+    let title = 'Le 13 juin 2016'
+    let subtitle = ''
+    let mySong = {
+        id: '123',
+        title: 'I used to like spaghettis with a lot of sauce mmh it was so delicious. I used to like spaghettis with a lot of sauce mmh it was so delicious',
+        artist: {id: 'abc', name: 'The Pains of Being Pure at Heart'}
+    }
+    let textProm = new Promise(function (resolve, reject) {
+         Promise.all(starProms).then(() => {
+            // Define title and subtitle :
+            if (state.currentEvent.type) {
+                if (state.currentEvent.type === 'news') {
+                    title = (state.locale === 'fr' ? 'Le ' : 'On ') + moment(state.currentEvent.date).format('LL')
+                    subtitle = state.currentEvent.title[state.locale === 'fr' ? 'fr' : 'en']
                 } else {
-                    if (state.currentEvent.fromNow) {
-                        subtitle = state.currentEvent.fromNow
-                    }
-                    if (state.currentEvent.type === 'date') {
+                    if (state.currentEvent.specialDay) {
                         title = (state.locale === 'fr' ? 'Le ' : 'On ') + moment(state.currentEvent.start).format('LL')
+                        subtitle = state.currentEvent.specialDay
                     } else {
-                        let pref = state.locale === 'fr' ? 'En ' : 'In '
-                        if (state.currentEvent.type === 'saison' && state.currentEvent.logo === 'flower') {
-                            pref = 'Au '
+                        if (state.currentEvent.fromNow) {
+                            subtitle = state.currentEvent.fromNow
                         }
-                        title = pref + state.currentEvent.name
+                        if (state.currentEvent.type === 'date') {
+                            title = (state.locale === 'fr' ? 'Le ' : 'On ') + moment(state.currentEvent.start).format('LL')
+                        } else {
+                            let pref = state.locale === 'fr' ? 'En ' : 'In '
+                            if (state.currentEvent.type === 'saison' && state.currentEvent.logo === 'flower') {
+                                pref = 'Au '
+                            }
+                            title = pref + state.currentEvent.name
+                        }
                     }
                 }
-                title += '..'
             }
-        }
-        // Get the song currently playing :
-        let mySong
-        state.currentSongsData.forEach(val => {
-            if (parseInt(val.id, 10) === parseInt(state.currentSongID, 10)) {
-                mySong = val
-            }
-        })
-        if (!mySong) {
-            mySong = {
-                id: '123',
-                title: 'I used to like spaghettis with a lot of sauce mmh it was so delicious. I used to like spaghettis with a lot of sauce mmh it was so delicious',
-                artist: {id: 'abc', name: 'The Pains of Being Pure at Heart'}
-            }
-        }
+            // Get the song currently playing :
+            state.currentSongsData.forEach(val => {
+                if (parseInt(val.id, 10) === parseInt(state.currentSongID, 10)) {
+                    mySong = val
+                }
+            })
 
-        ctx.globalAlpha = 1
-        // Title
-        ctx.font = 'italic 40px Raleway'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'right'
-        let rectTitle = wrapText(ctx, title, mc.width - 10, 70, Math.max(0.8 * mc.width, mc.width - 50), 40, true)
-        // I listened to..
-        ctx.textAlign = 'center'
-        wrapText(ctx, state.locale === 'fr' ? 'J\'écoutais :' : 'I listened to :', mc.width / 2, mc.height / 2, mc.width, 40, true)
-        // Subtitle
-        ctx.font = '26px Roboto'
-        ctx.fillStyle = '#A493C6'
-        ctx.textAlign = 'right'
-        wrapText(ctx, subtitle, mc.width - 10, 80 + rectTitle.h, 0.8 * mc.width, 26, true)
-        // Song title
-        ctx.textAlign = 'left'
-        ctx.font = '26px Roboto'
-        let songRect = wrapText(ctx, '"' + mySong.title + '"', 0, 0, mc.width - 40, 26, false)
-        ctx.fillStyle = state.bckCol
-        ctx.globalCompositeOperation = 'screen'
-        ctx.fillRect(20, mc.height - 5 - 26 - songRect.h, songRect.w, songRect.h)
-        ctx.fillStyle = 'black'
-        ctx.globalCompositeOperation = 'source-over'
-        wrapText(ctx, '"' + mySong.title + '"', 20, mc.height - 10 - songRect.h, mc.width - 40, 26, true)
-        // Artist name
-        ctx.textAlign = 'left'
-        ctx.font = '40px Times New Roman'
-        let artistRect = wrapText(ctx, mySong.artist.name, 0, 0, mc.width - 40, 40, false)
-        ctx.fillStyle = state.bckCol
-        ctx.globalCompositeOperation = 'screen'
-        ctx.fillRect(20, mc.height - 40 - songRect.h - artistRect.h, artistRect.w, artistRect.h)
-        ctx.fillStyle = 'black'
-        ctx.globalCompositeOperation = 'source-over'
-        wrapText(ctx, mySong.artist.name, 20, mc.height - 5 - songRect.h - artistRect.h, mc.width - 40, 40, true)
+            ctx.globalAlpha = 1
+            // Title
+            ctx.font = 'italic 40px Raleway'
+            ctx.fillStyle = 'white'
+            ctx.textAlign = 'right'
+            let rectTitle = wrapText(ctx, title + '..', mc.width - 10, 70, Math.max(0.8 * mc.width, mc.width - 50), 40, true)
+            // I listened to..
+            ctx.textAlign = 'center'
+            wrapText(ctx, state.locale === 'fr' ? 'J\'écoutais :' : 'I listened to :', mc.width / 2, mc.height / 2, mc.width, 40, true)
+            // Subtitle
+            ctx.font = '26px Roboto'
+            ctx.fillStyle = '#A493C6'
+            ctx.textAlign = 'right'
+            wrapText(ctx, subtitle, mc.width - 10, 80 + rectTitle.h, 0.8 * mc.width, 26, true)
+            // Song title
+            ctx.textAlign = 'left'
+            ctx.font = '26px Roboto'
+            let songRect = wrapText(ctx, '"' + mySong.title + '"', 0, 0, mc.width - 40, 26, false)
+            ctx.fillStyle = state.bckCol
+            ctx.globalCompositeOperation = 'screen'
+            ctx.fillRect(20, mc.height - 5 - 26 - songRect.h, songRect.w, songRect.h)
+            ctx.fillStyle = 'black'
+            ctx.globalCompositeOperation = 'source-over'
+            wrapText(ctx, '"' + mySong.title + '"', 20, mc.height - 10 - songRect.h, mc.width - 40, 26, true)
+            // Artist name
+            ctx.textAlign = 'left'
+            ctx.font = '40px Times New Roman'
+            let artistRect = wrapText(ctx, mySong.artist.name, 0, 0, mc.width - 40, 40, false)
+            ctx.fillStyle = state.bckCol
+            ctx.globalCompositeOperation = 'screen'
+            ctx.fillRect(20, mc.height - 40 - songRect.h - artistRect.h, artistRect.w, artistRect.h)
+            ctx.fillStyle = 'black'
+            ctx.globalCompositeOperation = 'source-over'
+            wrapText(ctx, mySong.artist.name, 20, mc.height - 5 - songRect.h - artistRect.h, mc.width - 40, 40, true)
+            let jj = state.locale === 'fr' ? ' j\'écoutais ' : ' I listened to '
+            let stext = title + jj + mySong.artist.name + ' - ' + mySong.title
+            resolve(stext)
+         })
     })
+    return textProm
 }

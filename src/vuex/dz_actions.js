@@ -248,18 +248,20 @@ function loopDailySongsHisto (dispatch, state, resolve, reject, indexesTab) {
             lastProm.then(() => {
                 currentProm.then(result => {
                     dispatch('RESET_TIMESFAILED')
-                    dispatch('INC_LOADINGSONGSINDEX', result.data.length)
-                    result.data.forEach(song => {
-                        dispatch('ADD_DAILYSONG', {
-                            date: moment.unix(song.timestamp).format('YYYY-MM-DD'),
-                            id: song.id
+                    setTimeout(() => {
+                        dispatch('INC_LOADINGSONGSINDEX', result.data.length)
+                        result.data.forEach(song => {
+                            dispatch('ADD_DAILYSONG', {
+                                date: moment.unix(song.timestamp).format('YYYY-MM-DD'),
+                                id: song.id
+                            })
                         })
-                    })
-                    if (result.index === 0) {
-                        dispatch('SET_DATEBOUNDS', {last: moment.unix(result.data[0].timestamp).format('YYYY-MM-DD')})
-                    }
-                    dispatch('SET_DATEBOUNDS', {first: moment.unix(result.data[result.data.length - 1].timestamp).format('YYYY-MM-DD')})
-                    resProm()
+                        if (result.index === 0) {
+                            dispatch('SET_DATEBOUNDS', {last: moment.unix(result.data[0].timestamp).format('YYYY-MM-DD')})
+                        }
+                        dispatch('SET_DATEBOUNDS', {first: moment.unix(result.data[result.data.length - 1].timestamp).format('YYYY-MM-DD')})
+                        resProm()
+                    }, 0)
                 }).catch(error => {
                     // If quota exceeded => remember missing index to try it again later, and continue loading histo
                     if (typeof error.index === 'number' && (error.index % 1) === 0) {

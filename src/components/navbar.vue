@@ -139,7 +139,7 @@
             })
         },
         btnModal: function (type) {
-            if (this.auth.status && !this.loading) {
+            if (this.auth.status && !this.loading && (type !== 'share' || this.currentEvent.id)) {
                 this.setCurrentModal(type)
             }
         }
@@ -173,7 +173,6 @@
 .navbar-side {
     position: relative; top:10px; left: 275px;
     display: inline-block; height: 95px;
-    /*border: 1px solid white;*/
     background-color: #282828;
     border-radius: 5px;
     box-shadow: 0 0 30px 0 #505050;
@@ -181,7 +180,6 @@
 .navbar-side::before, .navbar-side::after {
     content: "\00a0"; z-index: -1;
     background-color: #282828;
-    /*border: 1px solid white;*/
     box-shadow: 0 0 30px 0 #505050;
     position: absolute; display: block;
     width: 20px; height: 20px; left: -10px; top:35px;
@@ -189,8 +187,8 @@
 }
 .navbar-side::after {box-shadow: none; z-index: 10;}
 .navbar-side-btn {
-    display: inline-block; position: relative;
-    overflow: hidden; cursor: pointer;
+    display: inline-block; position: relative; vertical-align: top;
+    overflow: hidden; cursor: default;
     color: #636363; font-family: 'Roboto Condensed', Helvetica, sans-serif;
     font-size: 19px; font-style: italic; text-align: center;
     top: 20%; width: 100px; height: 60%;
