@@ -14,7 +14,7 @@
                 </div>
                 <div class="share-bt-line">
                     <!-- <div class="fb-share-button" data-href="https://matlesca.github.io/backtrack/" data-layout="button" data-size="large" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse">Partager</a></div> -->
-                    <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fmatlesca.github.io%2Fbacktrack%2F%23%2F&layout=button&size=large&mobile_iframe=true&appId=1809656775937797&width=89&height=28" width="89" height="38" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+                    <iframe src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Fbacktrack.cc%2F&layout=button&size=large&mobile_iframe=true&appId=1809656775937797&width=89&height=28" width="89" height="38" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
                     <iframe
                       v-bind:src="twitterSRC"
                       width="100"
@@ -49,7 +49,7 @@ export default {
     },
     computed: {
         twitterSRC: function () {
-            return 'https://platform.twitter.com/widgets/tweet_button.html?size=l&url=https%3A%2F%2Fmatlesca.github.io%2Fbacktrack%2F%23%2F&text=' + this.copyText
+            return 'https://platform.twitter.com/widgets/tweet_button.html?size=l&url=http%3A%2F%2F%backtrack.cc%2F&text=' + this.copyText
         }
     },
     methods: {
