@@ -7,7 +7,7 @@ module.exports = {
   },
   output: {
     path: './build',
-    publicPath: '/backtrack/build/',
+    publicPath: '/build/',
     filename: 'bundle.js'
   },
   module: {
