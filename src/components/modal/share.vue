@@ -49,7 +49,7 @@ export default {
     },
     computed: {
         twitterSRC: function () {
-            return 'https://platform.twitter.com/widgets/tweet_button.html?size=l&url=http%3A%2F%2F%backtrack.cc%2F&text=' + this.copyText
+            return 'https://platform.twitter.com/widgets/tweet_button.html?size=l&url=http%3A%2F%2Fbacktrack.cc%2F&text=' + this.copyText
         }
     },
     methods: {
