@@ -13,10 +13,10 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.vue$/, loader: 'vue' },
-      { test: /\.json$/, loader: 'json' },
+      // { test: /\.json$/, loader: 'url?name=[name].[ext]' },
       { test: /\.js$/, exclude: /node_modules/, loader: 'babel'},
       // { test: /\.(png|jpg)$/, loader: 'file' },
-      { test: /\.(png|jpg)$/, loader: 'url?limit=10000'},
+      { test: /\.(png|jpg|json)$/, loader: 'url?limit=10000&name=[name].[ext]'},
       { test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff' },
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream' },
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },

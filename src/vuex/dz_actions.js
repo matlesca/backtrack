@@ -4,18 +4,18 @@ import moment from 'moment'
 // DEEZER INIT :
 export function initApp ({dispatch}, http) {
     return new Promise(function (resolve, reject) {
-        // DZ.init({
-        //     appId: '172545',
-        //     channelUrl: 'http://localhost:8080/index.html'
-        // })
+        DZ.init({
+            appId: '172545',
+            channelUrl: 'http://localhost:8080/index.html'
+        })
         // DZ.init({
         //     appId: '191362',
         //     channelUrl: 'https://matlesca.github.io/backtrack/index.html'
         // })
-        DZ.init({
-            appId: '191362',
-            channelUrl: 'http://backtrack.cc/index.html'
-        })
+        // DZ.init({
+        //     appId: '191362',
+        //     channelUrl: 'http://backtrack.cc/index.html'
+        // })
         var r = Math.round(40 + Math.round(Math.random()) * 40 + Math.random() * 40)
         var g = Math.round(40 + Math.round(Math.random()) * 40 + Math.random() * 40)
         var b = Math.round(40 + Math.round(Math.random()) * 40 + Math.random() * 40)

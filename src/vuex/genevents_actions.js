@@ -1,21 +1,25 @@
 import moment from 'moment'
+import Vue from 'vue'
 import {getIntervalSongs} from './algo_actions.js'
-import loadEvents from '../events.json'
+import eventsURL from '../events.json'
 
 export function generateEvents ({state, dispatch}) {
 	return new Promise((resolve, reject) => {
-		let delayTimer = 0
-		for (let ee = 0; ee < loadEvents.length; ee++) {
+		Vue.http.get(eventsURL).then(response => {
+			let loadEvents = JSON.parse(response.body)
+			let delayTimer = 0
+			for (let ee = 0; ee < loadEvents.length; ee++) {
+				setTimeout(() => {
+					if (getIntervalSongs({state}, loadEvents[ee].date, loadEvents[ee].date, 12).length >= 5) {
+						dispatch('ADD_EVENT', loadEvents[ee])
+					}
+				}, delayTimer)
+				delayTimer += 1
+			}
 			setTimeout(() => {
-				if (getIntervalSongs({state}, loadEvents[ee].date, loadEvents[ee].date, 12).length >= 5) {
-					dispatch('ADD_EVENT', loadEvents[ee])
-				}
+				resolve()
 			}, delayTimer)
-			delayTimer += 1
-		}
-		setTimeout(() => {
-			resolve()
-		}, delayTimer)
+		}, error => console.log('error parsing json', error))
 	})
 }
 
