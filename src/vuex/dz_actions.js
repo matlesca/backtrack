@@ -47,6 +47,8 @@ export function initPlayer ({dispatch, state}) {
         DZ.init({
             appId: '172545',
             channelUrl: 'http://localhost:8080/index.html',
+            // appId: '191362',
+            // channelUrl: 'http://backtrack.cc/index.html',
             player: {
                 onload: () => {
                     dispatch('SET_INITPLAYER', true)
