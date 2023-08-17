@@ -166,7 +166,7 @@ import {
   resetSongs,
 } from "../vuex/dz_actions";
 import { setAppLoading, setCurrentModal } from "../vuex/ui_actions";
-import { generateDateTags, generateEvents } from "../vuex/genevents_actions.js";
+import { generateDateTags } from "../vuex/genevents_actions.js";
 import Cosmos from "./cosmos/cosmosRendering.js";
 
 export default {
@@ -179,7 +179,7 @@ export default {
       initApp,
       initPlayer,
       generateDateTags,
-      generateEvents,
+      // generateEvents,
       getHistoBound,
       getAllSongs,
       resetSongs,
@@ -285,10 +285,10 @@ export default {
     loadEvents: function () {
       this.currentHeader = "eventLoading";
       this.setAppLoading(true);
-      this.generateEvents().then(() => {
-        this.generateDateTags().then(() => {
-          this.loadPlayer();
-        });
+      // this.generateEvents().then(() => {
+      // });
+      this.generateDateTags().then(() => {
+        this.loadPlayer();
       });
     },
     loadPlayer: function () {

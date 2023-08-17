@@ -83,7 +83,6 @@ export function login({ dispatch }) {
     DZ.login(
       function (response) {
         if (response.authResponse) {
-          console.log(response);
           if (response.status === "connected") {
             dispatch("SET_ALLOWFULLSONGS", true);
           } else {
@@ -173,7 +172,6 @@ function getAPISongsHisto(index, limit, strict, delay) {
             "/user/me/history&index=" + index + "&limit=" + limit,
             function (response) {
               if (response.data) {
-                console.log(response);
                 if (response.data.length === 0) {
                   if (strict) {
                     reject({
@@ -190,7 +188,6 @@ function getAPISongsHisto(index, limit, strict, delay) {
                   resolve({ index: index, limit: limit, data: response.data });
                 }
               } else if (response.error) {
-                console.log(response);
                 reject({ message: response.error, index: index, limit: limit });
               } else {
                 reject({ message: "No response", index: index, limit: limit });
@@ -229,7 +226,6 @@ function loopBounds(dispatch, state, resolve, reject) {
   var delta;
   getAPISongsHisto(state.histoBound, 40, true, state.delayRequests)
     .then((result) => {
-      console.log(result.data);
       if (state.histoBound >= 100) {
         dispatch("RESET_TIMESFAILED");
       }
